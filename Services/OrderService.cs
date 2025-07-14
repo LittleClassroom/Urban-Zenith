@@ -103,13 +103,11 @@ namespace UrbanZenith.Services
                 return;
             }
 
-            // Update order status to Completed
             var updateOrderCmd = conn.CreateCommand();
             updateOrderCmd.CommandText = "UPDATE Orders SET Status = 'Completed' WHERE Id = @orderId";
             updateOrderCmd.Parameters.AddWithValue("@orderId", orderId);
             updateOrderCmd.ExecuteNonQuery();
 
-            // Update table status to Unoccupied
             var updateTableCmd = conn.CreateCommand();
             updateTableCmd.CommandText = "UPDATE Tables SET Status = 'Available' WHERE Id = @tableId";
             updateTableCmd.Parameters.AddWithValue("@tableId", tableId);
@@ -118,7 +116,6 @@ namespace UrbanZenith.Services
             Console.WriteLine($"Order {orderId} marked as completed. Table {tableId} is now unoccupied.");
         }
 
-        // Get the active order ID by table ID (if any)
         public static int? GetActiveOrderIdByTableId(int tableId)
         {
             using var conn = DatabaseContext.GetConnection();
@@ -134,5 +131,36 @@ namespace UrbanZenith.Services
 
             return Convert.ToInt32(result);
         }
+
+        public static decimal CalculateTotalByTableId(int tableId)
+        {
+            decimal total = 0m;
+
+            string sql = @"
+                SELECT oi.Quantity, mi.Price
+                FROM Orders o
+                INNER JOIN OrderItems oi ON o.Id = oi.OrderId
+                INNER JOIN MenuItems mi ON oi.MenuItemId = mi.Id
+                WHERE o.TableId = @tableId AND o.Status = 'Active';
+            ";
+
+            var parameters = new SQLiteParameter[]
+            {
+                new SQLiteParameter("@tableId", tableId)
+            };
+
+            DatabaseContext.ExecuteQuery(sql, reader =>
+            {
+                while (reader.Read())
+                {
+                    int quantity = Convert.ToInt32(reader["Quantity"]);
+                    decimal price = Convert.ToDecimal(reader["Price"]);
+                    total += quantity * price;
+                }
+            }, parameters);
+
+            return total;
+        }
+
     }
 }

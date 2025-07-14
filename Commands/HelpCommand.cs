@@ -5,7 +5,7 @@ using UrbanZenith.Interfaces;
 
 namespace UrbanZenith.Commands
 {
-    public class HelpCommand : ICommand
+    public class HelpCommand : ICommand, IMenuCommand
     {
         public string Name => "help";
         public string Description => "Displays a list of available commands.";
@@ -17,6 +17,18 @@ namespace UrbanZenith.Commands
         }
 
         public void Execute(string args)
+        {
+            ShowHelp();
+        }
+
+        public void ShowMenu()
+        {
+            ShowHelp();
+            Console.WriteLine("Press Enter to return to the main menu...");
+            Console.ReadLine();
+        }
+
+        private void ShowHelp()
         {
             Console.WriteLine("\nAvailable commands:");
             Console.WriteLine("-------------------");

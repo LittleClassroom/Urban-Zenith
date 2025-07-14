@@ -2,6 +2,15 @@
   "version": 3,
   "targets": {
     "net9.0": {
+      "ConsoleTableExt/3.3.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/ConsoleTableExt.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/ConsoleTableExt.dll": {}
+        }
+      },
       "EntityFramework/6.4.4": {
         "type": "package",
         "dependencies": {
@@ -393,6 +402,21 @@
     }
   },
   "libraries": {
+    "ConsoleTableExt/3.3.0": {
+      "sha512": "kQ1P7mgDQbvEDXGt1sheOQbu37TidLnOv7RjcSCqW8m/weFtu4adMkN75YQHp4mSqquokGdBJOAKGiegLx2Nhg==",
+      "type": "package",
+      "path": "consoletableext/3.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "consoletableext.3.3.0.nupkg.sha512",
+        "consoletableext.nuspec",
+        "lib/net35/ConsoleTableExt.dll",
+        "lib/net46/ConsoleTableExt.dll",
+        "lib/netstandard2.0/ConsoleTableExt.dll"
+      ]
+    },
     "EntityFramework/6.4.4": {
       "sha512": "yj1+/4tci7Panu3jKDHYizxwVm0Jvm7b7m057b5h4u8NUHGCR8WIWirBTw+8EptRffwftIWPBeIRGNKD1ewEMQ==",
       "type": "package",
@@ -1211,6 +1235,7 @@
   },
   "projectFileDependencyGroups": {
     "net9.0": [
+      "ConsoleTableExt >= 3.3.0",
       "System.Data.SQLite >= 1.0.119"
     ]
   },
@@ -1264,6 +1289,10 @@
       "net9.0": {
         "targetAlias": "net9.0",
         "dependencies": {
+          "ConsoleTableExt": {
+            "target": "Package",
+            "version": "[3.3.0, )"
+          },
           "System.Data.SQLite": {
             "target": "Package",
             "version": "[1.0.119, )"

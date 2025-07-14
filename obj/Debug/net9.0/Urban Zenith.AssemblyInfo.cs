@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Urban Zenith")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+294d12bd4de26654e9c3ebc090354bae104b34c4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9f69d515756aa7b74581032d84ca9ae6cc7cd9b1")]
 [assembly: System.Reflection.AssemblyProductAttribute("Urban Zenith")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Urban Zenith")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

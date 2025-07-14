@@ -4,7 +4,7 @@ using UrbanZenith.Services;
 
 namespace UrbanZenith.Commands
 {
-    public class OrderCommand : ICommand
+    public class OrderCommand : ICommand, IMenuCommand
     {
         public string Name => "order";
         public string Description => "Manage orders (new, list, complete, additem, viewitems, removeitem, updateitem)";
@@ -102,6 +102,108 @@ namespace UrbanZenith.Commands
             catch (Exception ex)
             {
                 Console.WriteLine($"[ERROR] {ex.Message}");
+            }
+        }
+
+        public void ShowMenu()
+        {
+            while (true)
+            {
+                Console.WriteLine("\n=== Order Management Menu ===");
+                Console.WriteLine("1. New order");
+                Console.WriteLine("2. List orders");
+                Console.WriteLine("3. Complete order");
+                Console.WriteLine("4. Add item to order");
+                Console.WriteLine("5. View items for table");
+                Console.WriteLine("6. Remove order item");
+                Console.WriteLine("7. Update order item quantity");
+                Console.WriteLine("0. Back to main menu");
+                Console.Write("Choose an option: ");
+
+                string input = Console.ReadLine()?.Trim();
+                if (input == "0") break;
+
+                try
+                {
+                    switch (input)
+                    {
+                        case "1":
+                            Console.Write("Enter Table ID: ");
+                            if (int.TryParse(Console.ReadLine(), out int newTableId))
+                                OrderService.CreateNewOrder(newTableId);
+                            else
+                                Console.WriteLine("Invalid Table ID.");
+                            break;
+
+                        case "2":
+                            OrderService.ListOrders();
+                            break;
+
+                        case "3":
+                            Console.Write("Enter Order ID to complete: ");
+                            if (int.TryParse(Console.ReadLine(), out int completeId))
+                                OrderService.CompleteOrder(completeId);
+                            else
+                                Console.WriteLine("Invalid Order ID.");
+                            break;
+
+                        case "4":
+                            Console.Write("Enter Table ID: ");
+                            if (int.TryParse(Console.ReadLine(), out int tableId))
+                            {
+                                int? activeOrderId = OrderService.GetActiveOrderIdByTableId(tableId);
+                                if (activeOrderId == null)
+                                {
+                                    activeOrderId = OrderService.CreateNewOrder(tableId);
+                                    if (activeOrderId == -1) break;
+                                }
+                                OrderItemService.AddItemsToOrder(activeOrderId.Value);
+                            }
+                            else
+                                Console.WriteLine("Invalid Table ID.");
+                            break;
+
+                        case "5":
+                            Console.Write("Enter Table ID: ");
+                            if (int.TryParse(Console.ReadLine(), out int viewTableId))
+                                OrderItemService.ListItemsForTable(viewTableId);
+                            else
+                                Console.WriteLine("Invalid Table ID.");
+                            break;
+
+                        case "6":
+                            Console.Write("Enter Order Item ID to remove: ");
+                            if (int.TryParse(Console.ReadLine(), out int removeItemId))
+                                OrderItemService.RemoveOrderItem(removeItemId);
+                            else
+                                Console.WriteLine("Invalid Order Item ID.");
+                            break;
+
+                        case "7":
+                            Console.Write("Enter Order Item ID to update: ");
+                            if (!int.TryParse(Console.ReadLine(), out int updateItemId))
+                            {
+                                Console.WriteLine("Invalid Order Item ID.");
+                                break;
+                            }
+                            Console.Write("Enter new quantity: ");
+                            if (!int.TryParse(Console.ReadLine(), out int newQty))
+                            {
+                                Console.WriteLine("Invalid quantity.");
+                                break;
+                            }
+                            OrderItemService.UpdateOrderItemQuantity(updateItemId, newQty);
+                            break;
+
+                        default:
+                            Console.WriteLine("Invalid option.");
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ERROR] {ex.Message}");
+                }
             }
         }
 

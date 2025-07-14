@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ConsoleTableExt;
+using System;
+using System.Data.Entity.Core.Objects;
 using System.Data.SQLite;
 using UrbanZenith.Database;
 using UrbanZenith.Models;
@@ -17,11 +19,22 @@ namespace UrbanZenith.Services
 
             using var reader = cmd.ExecuteReader();
 
-            Console.WriteLine("=== Staff List ===");
+            var rows = new List<object[]>();
+
+            Console.WriteLine("\n\n===== Staff List =====");
             while (reader.Read())
             {
-                Console.WriteLine($"[{reader.GetInt32(0)}]: {reader.GetString(1)}");
+                rows.Add(new object[] {
+                    reader.GetInt32(0),
+                    reader.GetString(1)
+                });
             }
+
+            ConsoleTableBuilder
+                .From(rows)
+                .WithColumn("ID", "Name")
+                .WithFormat(ConsoleTableBuilderFormat.MarkDown)
+                .ExportAndWriteLine();
         }
 
         public static void GetStaffInfo(int id)
@@ -35,13 +48,22 @@ namespace UrbanZenith.Services
 
             using var reader = cmd.ExecuteReader();
 
+            var rows = new List<Object[]>();
+
             if (reader.Read())
             {
-                Console.WriteLine("=== Staff Details ===");
-                Console.WriteLine($"ID: {reader.GetInt32(0)}");
-                Console.WriteLine($"Name: {reader.GetString(1)}");
-                Console.WriteLine($"Role: {reader.GetString(2)}");
+                Console.WriteLine("=================================");
+                Console.WriteLine("         Staff Information");
+                Console.WriteLine("=================================");
+                Console.WriteLine($"ID      : S-{reader.GetInt32(0).ToString("D3")}");
+                Console.WriteLine($"Name    : {reader.GetString(1)}");
+                Console.WriteLine($"Role    : {reader.GetString(2)}");
                 Console.WriteLine($"Username: {reader.GetString(3)}");
+                Console.WriteLine("=================================");
+
+
+                Console.WriteLine("\n\n\n");
+
             }
             else
             {

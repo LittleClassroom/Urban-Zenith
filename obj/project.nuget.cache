@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Vx48OyyjAFU=",
+  "dgSpecHash": "wJ0kHyD8VkE=",
   "success": true,
   "projectFilePath": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Urban Zenith.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\ASUS\\.nuget\\packages\\consoletableext\\3.3.0\\consoletableext.3.3.0.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\entityframework\\6.4.4\\entityframework.6.4.4.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",

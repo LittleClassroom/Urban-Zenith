@@ -8,10 +8,19 @@
     ".NETCoreApp,Version=v9.0": {
       "Urban Zenith/1.0.0": {
         "dependencies": {
+          "ConsoleTableExt": "3.3.0",
           "System.Data.SQLite": "1.0.119"
         },
         "runtime": {
           "Urban Zenith.dll": {}
+        }
+      },
+      "ConsoleTableExt/3.3.0": {
+        "runtime": {
+          "lib/netstandard2.0/ConsoleTableExt.dll": {
+            "assemblyVersion": "3.1.9.0",
+            "fileVersion": "3.1.9.0"
+          }
         }
       },
       "EntityFramework/6.4.4": {
@@ -281,6 +290,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "ConsoleTableExt/3.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kQ1P7mgDQbvEDXGt1sheOQbu37TidLnOv7RjcSCqW8m/weFtu4adMkN75YQHp4mSqquokGdBJOAKGiegLx2Nhg==",
+      "path": "consoletableext/3.3.0",
+      "hashPath": "consoletableext.3.3.0.nupkg.sha512"
     },
     "EntityFramework/6.4.4": {
       "type": "package",
