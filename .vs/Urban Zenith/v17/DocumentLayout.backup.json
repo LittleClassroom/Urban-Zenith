@@ -3,36 +3,20 @@
   "WorkspaceRootPath": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|d:\\study material\\university\\2nd year\\c#\\urban-zenith\\commands\\reportcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|solutionrelative:commands\\reportcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|d:\\study material\\university\\2nd year\\c#\\urban-zenith\\services\\orderitemservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|solutionrelative:services\\orderitemservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|d:\\study material\\university\\2nd year\\c#\\urban-zenith\\services\\reportservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|solutionrelative:services\\reportservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|d:\\study material\\university\\2nd year\\c#\\urban-zenith\\services\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|solutionrelative:services\\orderservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|d:\\study material\\university\\2nd year\\c#\\urban-zenith\\commands\\staffcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|solutionrelative:commands\\staffcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|d:\\study material\\university\\2nd year\\c#\\urban-zenith\\commands\\ordercommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|solutionrelative:commands\\ordercommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|d:\\study material\\university\\2nd year\\c#\\urban-zenith\\services\\menuservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|solutionrelative:services\\menuservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|d:\\study material\\university\\2nd year\\c#\\urban-zenith\\interfaces\\imenucommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|solutionrelative:interfaces\\imenucommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|d:\\study material\\university\\2nd year\\c#\\urban-zenith\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|d:\\study material\\university\\2nd year\\c#\\urban-zenith\\models\\menuitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|solutionrelative:models\\menuitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|d:\\study material\\university\\2nd year\\c#\\urban-zenith\\models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4071C68F-9B53-4B0A-99C7-4C19CE2FCB95}|Urban Zenith.csproj|solutionrelative:models\\order.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -41,110 +25,70 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 101,
-          "SelectedChildIndex": 2,
+          "DockedWidth": 110,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ReportServices.cs",
-              "DocumentMoniker": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Services\\ReportServices.cs",
-              "RelativeDocumentMoniker": "Services\\ReportServices.cs",
-              "ToolTip": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Services\\ReportServices.cs*",
-              "RelativeToolTip": "Services\\ReportServices.cs*",
-              "ViewState": "AgIAAEsAAAAAAAAAAAAYwG8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-14T09:44:26.862Z",
-              "EditorCaption": ""
-            },
+            }
+          ]
+        },
+        {
+          "DockedWidth": 92,
+          "SelectedChildIndex": 0,
+          "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ReportCommand.cs",
-              "DocumentMoniker": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Commands\\ReportCommand.cs",
-              "RelativeDocumentMoniker": "Commands\\ReportCommand.cs",
-              "ToolTip": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Commands\\ReportCommand.cs*",
-              "RelativeToolTip": "Commands\\ReportCommand.cs*",
-              "ViewState": "AgIAACoAAAAAAAAAAAAIwDwAAABiAAAAAAAAAA==",
+              "Title": "OrderItemService.cs",
+              "DocumentMoniker": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Services\\OrderItemService.cs",
+              "RelativeDocumentMoniker": "Services\\OrderItemService.cs",
+              "ToolTip": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Services\\OrderItemService.cs*",
+              "RelativeToolTip": "Services\\OrderItemService.cs*",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAQwEYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-12T09:06:34.094Z",
+              "WhenOpened": "2025-07-15T08:37:36.742Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "StaffCommand.cs",
+              "DocumentMoniker": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Commands\\StaffCommand.cs",
+              "RelativeDocumentMoniker": "Commands\\StaffCommand.cs",
+              "ToolTip": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Commands\\StaffCommand.cs",
+              "RelativeToolTip": "Commands\\StaffCommand.cs",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAswFsAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-15T08:07:06.793Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "OrderService.cs",
+              "DocumentMoniker": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Services\\OrderService.cs",
+              "RelativeDocumentMoniker": "Services\\OrderService.cs",
+              "ToolTip": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Services\\OrderService.cs",
+              "RelativeToolTip": "Services\\OrderService.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAAB8AAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-15T08:05:27.398Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "OrderCommand.cs",
               "DocumentMoniker": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Commands\\OrderCommand.cs",
               "RelativeDocumentMoniker": "Commands\\OrderCommand.cs",
               "ToolTip": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Commands\\OrderCommand.cs",
               "RelativeToolTip": "Commands\\OrderCommand.cs",
-              "ViewState": "AgIAALQAAAAAAAAAAAAswNEAAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAmwBEAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-12T09:06:22.224Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MenuService.cs",
-              "DocumentMoniker": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Services\\MenuService.cs",
-              "RelativeDocumentMoniker": "Services\\MenuService.cs",
-              "ToolTip": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Services\\MenuService.cs",
-              "RelativeToolTip": "Services\\MenuService.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAAACwAAAAlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-11T10:55:08.977Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Order.cs",
-              "DocumentMoniker": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Models\\Order.cs",
-              "RelativeDocumentMoniker": "Models\\Order.cs",
-              "ToolTip": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Models\\Order.cs",
-              "RelativeToolTip": "Models\\Order.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-11T10:55:05.127Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "MenuItem.cs",
-              "DocumentMoniker": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Models\\MenuItem.cs",
-              "RelativeDocumentMoniker": "Models\\MenuItem.cs",
-              "ToolTip": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Models\\MenuItem.cs",
-              "RelativeToolTip": "Models\\MenuItem.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-11T10:55:06.089Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "IMenuCommand.cs",
-              "DocumentMoniker": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Interfaces\\IMenuCommand.cs",
-              "RelativeDocumentMoniker": "Interfaces\\IMenuCommand.cs",
-              "ToolTip": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\Interfaces\\IMenuCommand.cs",
-              "RelativeToolTip": "Interfaces\\IMenuCommand.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-12T09:11:20.516Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": ".gitignore",
-              "DocumentMoniker": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\.gitignore",
-              "RelativeDocumentMoniker": ".gitignore",
-              "ToolTip": "D:\\Study Material\\University\\2nd Year\\C#\\Urban-Zenith\\.gitignore",
-              "RelativeToolTip": ".gitignore",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-07-12T08:58:22.253Z"
+              "WhenOpened": "2025-07-12T09:06:22.224Z",
+              "EditorCaption": ""
             }
           ]
         }

@@ -4,7 +4,7 @@ using UrbanZenith.Services;
 
 namespace UrbanZenith.Commands
 {
-    public class PaymentCommand : ICommand
+    public class PaymentCommand : ICommand, IMenuCommand
     {
         public string Name => "payment";
         public string Description => "Process payment or view payment history/details.";
@@ -13,7 +13,7 @@ namespace UrbanZenith.Commands
         {
             if (string.IsNullOrWhiteSpace(args))
             {
-                ShowHelp();
+                ShowMenu();
                 return;
             }
 
@@ -59,7 +59,7 @@ namespace UrbanZenith.Commands
 
             if (parts.Length == 1)
             {
-                // default: page 1, 10 records
+                // default
             }
             else if (parts.Length == 2 && int.TryParse(parts[1], out int parsedPage))
             {
@@ -90,6 +90,64 @@ namespace UrbanZenith.Commands
             }
 
             PaymentService.ShowPaymentDetail(paymentId);
+        }
+
+        public void ShowMenu()
+        {
+            while (true)
+            {
+                Console.WriteLine("\n=== Payment Management Menu ===");
+                Console.WriteLine("1. Process payment");
+                Console.WriteLine("2. View payment history");
+                Console.WriteLine("3. View payment details");
+                Console.WriteLine("0. Back to main menu");
+                Console.Write("Choose an option: ");
+
+                string input = Console.ReadLine()?.Trim();
+                if (input == "0") break;
+
+                try
+                {
+                    switch (input)
+                    {
+                        case "1":
+                            Console.Write("Enter Table ID: ");
+                            if (int.TryParse(Console.ReadLine(), out int tableId))
+                                PaymentService.ProcessPaymentWithPrompt(tableId);
+                            else
+                                Console.WriteLine("Invalid Table ID.");
+                            break;
+
+                        case "2":
+                            Console.Write("Enter page number (default 1): ");
+                            string pageInput = Console.ReadLine()?.Trim();
+                            int page = string.IsNullOrEmpty(pageInput) || !int.TryParse(pageInput, out int tmpPage) ? 1 : tmpPage;
+
+                            Console.Write("Enter page size (default 10): ");
+                            string sizeInput = Console.ReadLine()?.Trim();
+                            int pageSize = string.IsNullOrEmpty(sizeInput) || !int.TryParse(sizeInput, out int tmpSize) ? 10 : tmpSize;
+
+                            PaymentService.ShowPaymentHistory(page, pageSize);
+                            break;
+
+                        case "3":
+                            Console.Write("Enter Payment ID: ");
+                            if (int.TryParse(Console.ReadLine(), out int paymentId))
+                                PaymentService.ShowPaymentDetail(paymentId);
+                            else
+                                Console.WriteLine("Invalid Payment ID.");
+                            break;
+
+                        default:
+                            Console.WriteLine("Invalid option.");
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ERROR] {ex.Message}");
+                }
+            }
         }
 
         private void ShowHelp()

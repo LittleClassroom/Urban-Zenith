@@ -21,11 +21,14 @@ namespace UrbanZenith.Services
 
             var rows = new List<object[]>();
 
-            Console.WriteLine("\n\n===== Staff List =====");
+            Console.WriteLine("\n\n=============================");
+            Console.WriteLine("         Staff List");
+            Console.WriteLine("=============================");
+
             while (reader.Read())
             {
                 rows.Add(new object[] {
-                    reader.GetInt32(0),
+                    $"S-{reader.GetInt32(0).ToString("D3")}",
                     reader.GetString(1)
                 });
             }
@@ -35,6 +38,7 @@ namespace UrbanZenith.Services
                 .WithColumn("ID", "Name")
                 .WithFormat(ConsoleTableBuilderFormat.MarkDown)
                 .ExportAndWriteLine();
+            Console.WriteLine("=============================");
         }
 
         public static void GetStaffInfo(int id)

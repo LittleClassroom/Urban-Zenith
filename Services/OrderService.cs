@@ -8,13 +8,11 @@ namespace UrbanZenith.Services
 {
     public static class OrderService
     {
-        // Create a new order for a table
         public static int CreateNewOrder(int tableId)
         {
             using var conn = DatabaseContext.GetConnection();
             conn.Open();
 
-            // Check if table is already occupied
             var checkTableCmd = conn.CreateCommand();
             checkTableCmd.CommandText = "SELECT Status FROM Tables WHERE Id = @tableId";
             checkTableCmd.Parameters.AddWithValue("@tableId", tableId);

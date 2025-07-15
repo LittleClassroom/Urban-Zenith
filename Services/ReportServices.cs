@@ -6,11 +6,17 @@ using UrbanZenith.Database;
 
 namespace UrbanZenith.Services
 {
+
     public static class ReportService
     {
-        // 1. Daily Sales Summary
+        public static decimal SafeDecimal(object dbValue)
+        {
+            return dbValue != DBNull.Value ? Convert.ToDecimal(dbValue) : 0m;
+        }
+
         public static void ShowDailySalesReport(DateTime? date = null)
         {
+            Console.Clear();
             DateTime targetDate = date ?? DateTime.Today;
 
             string sql = @"
@@ -32,7 +38,7 @@ namespace UrbanZenith.Services
                     Console.WriteLine("─────── Daily Sales Report ───────");
                     Console.WriteLine($"Date           : {targetDate:yyyy-MM-dd}");
                     Console.WriteLine($"Payments Made  : {reader["TotalPayments"]}");
-                    Console.WriteLine($"Total Revenue  : {Convert.ToDecimal(reader["TotalRevenue"]):C}");
+                    Console.WriteLine($"Total Revenue  : {SafeDecimal(reader["TotalRevenue"])}");
                     Console.WriteLine("──────────────────────────────────");
                 }
             }, parameters);

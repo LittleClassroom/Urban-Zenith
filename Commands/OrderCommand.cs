@@ -118,7 +118,8 @@ namespace UrbanZenith.Commands
                 Console.WriteLine("6. Remove order item");
                 Console.WriteLine("7. Update order item quantity");
                 Console.WriteLine("0. Back to main menu");
-                Console.Write("Choose an option: ");
+                Console.WriteLine("================================");
+                Console.Write("Order >");
 
                 string input = Console.ReadLine()?.Trim();
                 if (input == "0") break;

@@ -41,18 +41,19 @@ namespace UrbanZenith.Services
                 var cmd = conn.CreateCommand();
                 cmd.CommandText = $"SELECT Id, Name, Description, Price FROM MenuItems Where Id = {itemId}";
                 using var reader = cmd.ExecuteReader();
-                Console.WriteLine($"Information Of Item ID # {itemId}");
                 while (reader.Read())
                 {
                     int id = reader.GetInt32(0);
                     string name = reader.GetString(1);
                     string description = reader.GetString(2);
                     decimal price = reader.GetDecimal(3);
+                    Console.WriteLine("---------------------------------------------------------------");
                     Console.WriteLine($"" +
-                        $"ID: {id}\n" +
+                        $"ID: {reader.GetInt32(0).ToString("D3")}\n" +
                         $"Name: {name}\n" +
                         $"Description: {description}\n" +
                         $"Price: {price}");
+                    Console.WriteLine("---------------------------------------------------------------");
 
                 }
 
@@ -64,7 +65,6 @@ namespace UrbanZenith.Services
             }
         }
 
-        // View a single menu item by ID
         public static void ViewMenuItem(int id)
         {
             using var conn = DatabaseContext.GetConnection();

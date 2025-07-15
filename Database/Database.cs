@@ -58,6 +58,7 @@ namespace UrbanZenith.Database
                         OrderId INTEGER NOT NULL,
                         MenuItemId INTEGER NOT NULL,
                         Quantity INTEGER DEFAULT 1,
+                        Price REAL NOT NULL,
                         FOREIGN KEY (OrderId) REFERENCES Orders(Id),
                         FOREIGN KEY (MenuItemId) REFERENCES MenuItems(Id)
                     );

@@ -50,15 +50,16 @@ namespace UrbanZenith.Services
                     continue;
                 }
 
-                // Insert into OrderItems
+                // Insert into OrderItems (INCLUDING Price)
                 var insertCmd = conn.CreateCommand();
                 insertCmd.CommandText = @"
-                    INSERT INTO OrderItems (OrderId, MenuItemId, Quantity)
-                    VALUES (@orderId, @menuItemId, @quantity);
-                ";
+            INSERT INTO OrderItems (OrderId, MenuItemId, Quantity, Price)
+            VALUES (@orderId, @menuItemId, @quantity, @price);
+        ";
                 insertCmd.Parameters.AddWithValue("@orderId", orderId);
                 insertCmd.Parameters.AddWithValue("@menuItemId", menuItemId);
                 insertCmd.Parameters.AddWithValue("@quantity", quantity);
+                insertCmd.Parameters.AddWithValue("@price", price); // ⬅️ IMPORTANT
 
                 insertCmd.ExecuteNonQuery();
 
@@ -67,6 +68,7 @@ namespace UrbanZenith.Services
 
             Console.WriteLine("✅ Finished adding items.");
         }
+
 
         private static void AddOrUpdateOrderItem(int orderId, int menuItemId, int quantity)
         {

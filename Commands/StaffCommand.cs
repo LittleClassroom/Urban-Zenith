@@ -4,16 +4,16 @@ using UrbanZenith.Services;
 
 namespace UrbanZenith.Commands
 {
-    public class StaffCommand : ICommand
+    public class StaffCommand : ICommand, IMenuCommand
     {
         public string Name => "staff";
-        public string Description => "Manage staff members (list, add, remove).";
+        public string Description => "Manage staff members (list, add, remove, info, update)";
 
         public void Execute(string args)
         {
             if (string.IsNullOrWhiteSpace(args))
             {
-                ShowHelp();
+                ShowMenu();
                 return;
             }
 
@@ -46,17 +46,75 @@ namespace UrbanZenith.Commands
                     break;
 
                 case "update":
-                    if (parts.Length >= 2 && int.TryParse(parts[1], out int updateId))
+                    if (int.TryParse(subArgs, out int updateId))
                         StaffService.UpdateStaff(updateId);
                     else
                         Console.WriteLine("Usage: staff update <id>");
                     break;
 
-
                 default:
                     Console.WriteLine($"Unknown staff command: '{subcommand}'");
                     ShowHelp();
                     break;
+            }
+        }
+
+        public void ShowMenu()
+        {
+            while (true)
+            {
+                Console.WriteLine("\n=== Staff Management Menu ===");
+                Console.WriteLine("1. List all staff");
+                Console.WriteLine("2. Add new staff member");
+                Console.WriteLine("3. Remove staff member");
+                Console.WriteLine("4. View staff info");
+                Console.WriteLine("5. Update staff details");
+                Console.WriteLine("0. Back to main menu");
+                Console.Write("Choose an option: ");
+
+                string input = Console.ReadLine()?.Trim();
+                if (input == "0") break;
+
+                try
+                {
+                    switch (input)
+                    {
+                        case "1":
+                            StaffService.ListStaff();
+                            break;
+                        case "2":
+                            StaffService.AddStaff();
+                            break;
+                        case "3":
+                            Console.Write("Enter Staff ID to remove: S-");
+                            if (int.TryParse(Console.ReadLine(), out int removeId))
+                                StaffService.RemoveStaff(removeId);
+                            else
+                                Console.WriteLine($"Invalid ID. S-{removeId}");
+                            break;
+                        case "4":
+                            Console.Write("Enter Staff ID to view: S-");
+                            if (int.TryParse(Console.ReadLine(), out int infoId))
+                                StaffService.GetStaffInfo(infoId);
+                            else
+                                Console.WriteLine($"Invalid ID. S-{infoId}");
+                            break;
+                        case "5":
+                            Console.Write("Enter Staff ID to update: ");
+                            if (int.TryParse(Console.ReadLine(), out int updateId))
+                                StaffService.UpdateStaff(updateId);
+                            else
+                                Console.WriteLine("Invalid ID.");
+                            break;
+                        default:
+                            Console.WriteLine("Invalid option.");
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ERROR] {ex.Message}");
+                }
             }
         }
 
@@ -68,7 +126,6 @@ namespace UrbanZenith.Commands
             Console.WriteLine("  staff remove <id>");
             Console.WriteLine("  staff info <id>");
             Console.WriteLine("  staff update <id>");
-
         }
     }
 }
