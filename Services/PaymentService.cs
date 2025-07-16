@@ -170,6 +170,7 @@ namespace UrbanZenith.Services
 
         public static void ShowPaymentDetail(int paymentId)
         {
+            Console.Clear();
             string sql = @"
                 SELECT p.Id, p.OrderId, p.PaymentMethod, p.PaidAmount, p.PaidAt,
                         o.TableId, t.Name AS TableName,t.type as TableType, o.OrderDate, o.Status
@@ -208,7 +209,8 @@ namespace UrbanZenith.Services
 
             if (!found)
             {
-                Console.WriteLine($"❌ Payment with ID {paymentId} not found.");
+
+                Console.WriteLine($"Payment with ID {paymentId} not found.");
             }
         }
 

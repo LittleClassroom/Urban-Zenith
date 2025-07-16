@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UrbanZenith.Interfaces;
+using Spectre.Console;
 
 namespace UrbanZenith.Commands
 {
@@ -24,19 +25,36 @@ namespace UrbanZenith.Commands
         public void ShowMenu()
         {
             ShowHelp();
-            Console.WriteLine("Press Enter to return to the main menu...");
+            AnsiConsole.MarkupLine("\n[yellow]Press Enter to return to the main menu...[/]");
             Console.ReadLine();
         }
 
         private void ShowHelp()
         {
-            Console.WriteLine("\nAvailable commands:");
-            Console.WriteLine("-------------------");
+            AnsiConsole.Clear();
+
+            AnsiConsole.Write(
+                new FigletText("Help")
+                    .LeftJustified()
+                    .Color(Color.Blue));
+
+            var table = new Table()
+                .Border(TableBorder.Rounded)
+                .Title("[green]Available Commands[/]")
+                .AddColumn(new TableColumn("[bold teal]Command[/]").Centered())
+                .AddColumn(new TableColumn("[bold yellow]Description[/]").LeftAligned());
+
             foreach (var cmd in _availableCommands.OrderBy(c => c.Name))
             {
-                Console.WriteLine($"  {cmd.Name,-10} - {cmd.Description}");
+                table.AddRow($"[purple]{cmd.Name}[/]", $"[silver]{cmd.Description}[/]");
             }
-            Console.WriteLine($"  {"exit",-10} - Quits the application.\n");
+
+            table.AddRow("[red]exit[/]", "[silver]Quits the application.[/]");
+
+            AnsiConsole.Write(table);
+
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine("[grey]Type a command name and press Enter to execute it.[/]");
         }
     }
 }

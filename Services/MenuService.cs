@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConsoleTableExt;
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Security.Cryptography;
@@ -9,87 +10,111 @@ namespace UrbanZenith.Services
 {
     public static class MenuService
     {
-        // List all menu items
-        public static void ListMenuItems()
+        
+        public static void ListMenuItems(int page = 1)
+        {
+            Console.Clear();
+            const int pageSize = 10;
+
+            if (page < 1) page = 1;
+
+            int totalItems = GetMenuItemCount();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            if (totalPages == 0) totalPages = 1;
+            if (page > totalPages) page = totalPages;
+
+            int offset = (page - 1) * pageSize;
+
+            using var conn = DatabaseContext.GetConnection();
+            conn.Open();
+
+            var cmd = conn.CreateCommand();
+            cmd.CommandText = @"
+        SELECT Id, Name, Price
+        FROM MenuItems
+        ORDER BY Id
+        LIMIT @limit OFFSET @offset;
+    ";
+            cmd.Parameters.AddWithValue("@limit", pageSize);
+            cmd.Parameters.AddWithValue("@offset", offset);
+
+            var rows = new List<List<object>>();
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                rows.Add(new List<object>
+        {
+            reader["Id"],
+            reader["Name"],
+            $"{Convert.ToDecimal(reader["Price"]):C}"
+        });
+            }
+
+            if (rows.Count == 0)
+            {
+                Console.WriteLine($"No menu items found on page {page}.");
+                return;
+            }
+
+            ConsoleTableExt.ConsoleTableBuilder
+                .From(rows)
+                .WithTitle($"Menu Items - Page {page}/{totalPages}", ConsoleColor.Yellow, ConsoleColor.Black)
+                .WithColumn("ID", "Name", "Price")
+                .ExportAndWriteLine();
+        }
+
+        private static int GetMenuItemCount()
         {
             using var conn = DatabaseContext.GetConnection();
             conn.Open();
 
             var cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT Id, Name, Description, Price FROM MenuItems ORDER BY Name;";
-
-            using var reader = cmd.ExecuteReader();
-
-            Console.WriteLine("=== Menu Items ===");
-            while (reader.Read())
-            {
-                int id = reader.GetInt32(0);
-                string name = reader.GetString(1);
-                decimal price = reader.GetDecimal(3);
-
-                Console.WriteLine($"[{id}] {name} - ${price:F2}");
-            }
-            Console.WriteLine("==================");
+            cmd.CommandText = "SELECT COUNT(*) FROM MenuItems";
+            return Convert.ToInt32(cmd.ExecuteScalar());
         }
 
-        public static void infoMenuItem(string itemId) {
+        public static void InfoMenuItem(int itemId)
+        {
+            Console.Clear();
             try
             {
                 using var conn = DatabaseContext.GetConnection();
                 conn.Open();
-                int itemid = int.Parse(itemId);
+
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = $"SELECT Id, Name, Description, Price FROM MenuItems Where Id = {itemId}";
+                cmd.CommandText = "SELECT Id, Name, Description, Price FROM MenuItems WHERE Id = @id";
+                cmd.Parameters.AddWithValue("@id", itemId);
+
                 using var reader = cmd.ExecuteReader();
-                while (reader.Read())
+
+                if (reader.Read())
                 {
                     int id = reader.GetInt32(0);
                     string name = reader.GetString(1);
-                    string description = reader.GetString(2);
+                    string description = reader.IsDBNull(2) ? "No description." : reader.GetString(2);
                     decimal price = reader.GetDecimal(3);
-                    Console.WriteLine("---------------------------------------------------------------");
-                    Console.WriteLine($"" +
-                        $"ID: {reader.GetInt32(0).ToString("D3")}\n" +
-                        $"Name: {name}\n" +
-                        $"Description: {description}\n" +
-                        $"Price: {price}");
-                    Console.WriteLine("---------------------------------------------------------------");
 
+                    Console.WriteLine("---------------------------------------------------------------");
+                    Console.WriteLine($"ID          : {id:D3}");
+                    Console.WriteLine($"Name        : {name}");
+                    Console.WriteLine($"Description : {description}");
+                    Console.WriteLine($"Price       : ${price:F2}");
+                    Console.WriteLine("---------------------------------------------------------------");
                 }
-
-
+                else
+                {
+                    Console.WriteLine($"[!] No menu item found with ID {itemId}.");
+                }
             }
-            catch(Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e);
+                Console.WriteLine("[ERROR] " + ex.Message);
             }
         }
 
-        public static void ViewMenuItem(int id)
-        {
-            using var conn = DatabaseContext.GetConnection();
-            conn.Open();
 
-            var cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT Id, Name, Description, Price FROM MenuItems WHERE Id = @id;";
-            cmd.Parameters.AddWithValue("@id", id);
 
-            using var reader = cmd.ExecuteReader();
 
-            if (reader.Read())
-            {
-                Console.WriteLine($"ID: {reader.GetInt32(0)}");
-                Console.WriteLine($"Name: {reader.GetString(1)}");
-                Console.WriteLine($"Description: {(reader.IsDBNull(2) ? "" : reader.GetString(2))}");
-                Console.WriteLine($"Price: ${reader.GetDecimal(3):F2}");
-            }
-            else
-            {
-                Console.WriteLine($"Menu item with ID {id} not found.");
-            }
-        }
-
-       
         public static void AddMenuItem()
         {
             Console.Write("Enter Name: ");

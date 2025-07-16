@@ -143,6 +143,22 @@
           }
         }
       },
+      "Spectre.Console/0.50.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Memory": "4.6.3"
+        },
+        "compile": {
+          "lib/net9.0/Spectre.Console.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Spectre.Console.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Stub.System.Data.SQLite.Core.NetStandard/1.0.119": {
         "type": "package",
         "compile": {
@@ -293,6 +309,15 @@
             "assetType": "runtime",
             "rid": "win"
           }
+        }
+      },
+      "System.Memory/4.6.3": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp2.1/_._": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.1/_._": {}
         }
       },
       "System.Security.AccessControl/4.7.0": {
@@ -699,6 +724,25 @@
         "version.txt"
       ]
     },
+    "Spectre.Console/0.50.0": {
+      "sha512": "gkwYncFqMjlPF6Yz8KeVsKWpdfv15sr6uKm+vXVa/8Q4tvx52LPzMQOO5m+bXwI3AGGFeY3cok3ZJbguYizswg==",
+      "type": "package",
+      "path": "spectre.console/0.50.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net8.0/Spectre.Console.dll",
+        "lib/net8.0/Spectre.Console.xml",
+        "lib/net9.0/Spectre.Console.dll",
+        "lib/net9.0/Spectre.Console.xml",
+        "lib/netstandard2.0/Spectre.Console.dll",
+        "lib/netstandard2.0/Spectre.Console.xml",
+        "logo.png",
+        "spectre.console.0.50.0.nupkg.sha512",
+        "spectre.console.nuspec"
+      ]
+    },
     "Stub.System.Data.SQLite.Core.NetStandard/1.0.119": {
       "sha512": "dI7ngiCNgdm+n00nQvFTa+LbHvE9MIQXwMSLRzJI/KAJ7G1WmCachsvfE1CD6xvb3OXJvYYEfv3+S/LHyhN0Rg==",
       "type": "package",
@@ -1039,6 +1083,27 @@
         "version.txt"
       ]
     },
+    "System.Memory/4.6.3": {
+      "sha512": "qdcDOgnFZY40+Q9876JUHnlHu7bosOHX8XISRoH94fwk6hgaeQGSgfZd8srWRZNt5bV9ZW2TljcegDNxsf+96A==",
+      "type": "package",
+      "path": "system.memory/4.6.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "buildTransitive/net461/System.Memory.targets",
+        "buildTransitive/net462/_._",
+        "lib/net462/System.Memory.dll",
+        "lib/net462/System.Memory.xml",
+        "lib/netcoreapp2.1/_._",
+        "lib/netstandard2.0/System.Memory.dll",
+        "lib/netstandard2.0/System.Memory.xml",
+        "lib/netstandard2.1/_._",
+        "system.memory.4.6.3.nupkg.sha512",
+        "system.memory.nuspec"
+      ]
+    },
     "System.Security.AccessControl/4.7.0": {
       "sha512": "JECvTt5aFF3WT3gHpfofL2MNNP6v84sxtXxpqhLBCcDRzqsPBmHhQ6shv4DwwN2tRlzsUxtb3G9M3763rbXKDg==",
       "type": "package",
@@ -1236,6 +1301,7 @@
   "projectFileDependencyGroups": {
     "net9.0": [
       "ConsoleTableExt >= 3.3.0",
+      "Spectre.Console >= 0.50.0",
       "System.Data.SQLite >= 1.0.119"
     ]
   },
@@ -1292,6 +1358,10 @@
           "ConsoleTableExt": {
             "target": "Package",
             "version": "[3.3.0, )"
+          },
+          "Spectre.Console": {
+            "target": "Package",
+            "version": "[0.50.0, )"
           },
           "System.Data.SQLite": {
             "target": "Package",

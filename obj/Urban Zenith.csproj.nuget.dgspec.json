@@ -54,6 +54,10 @@
               "target": "Package",
               "version": "[3.3.0, )"
             },
+            "Spectre.Console": {
+              "target": "Package",
+              "version": "[0.50.0, )"
+            },
             "System.Data.SQLite": {
               "target": "Package",
               "version": "[1.0.119, )"

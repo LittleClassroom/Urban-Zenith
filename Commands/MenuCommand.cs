@@ -23,11 +23,11 @@ namespace UrbanZenith.Commands
 
             switch (subcommand)
             {
-                case "view":
+                case "info":
                     if (int.TryParse(subArgs, out int id))
-                        MenuService.ViewMenuItem(id);
+                        MenuService.InfoMenuItem(id);
                     else
-                        Console.WriteLine("Usage: menu view <id>");
+                        Console.WriteLine("Usage: menu info <id>");
                     break;
 
                 case "add":
@@ -35,8 +35,12 @@ namespace UrbanZenith.Commands
                     break;
 
                 case "list":
-                    MenuService.ListMenuItems();
+                    int page = 1;
+                    if (parts.Length >= 2 && int.TryParse(parts[1], out int parsedPage))
+                        page = parsedPage;
+                    MenuService.ListMenuItems(page);
                     break;
+
 
                 case "update":
                     if (int.TryParse(subArgs, out int updateId))
@@ -61,6 +65,7 @@ namespace UrbanZenith.Commands
 
         public void ShowMenu()
         {
+            Console.Clear();
             while (true)
             {
                 Console.Clear();
@@ -84,7 +89,7 @@ namespace UrbanZenith.Commands
                     case "2":
                         Console.Write("Enter Menu Item ID: ");
                         if (int.TryParse(Console.ReadLine(), out int viewId))
-                            MenuService.ViewMenuItem(viewId);
+                            MenuService.InfoMenuItem(viewId);
                         else
                             Console.WriteLine("Invalid ID.");
                         break;
@@ -127,7 +132,8 @@ namespace UrbanZenith.Commands
             Console.WriteLine("Usage:");
             Console.WriteLine("  menu add");
             Console.WriteLine("  menu list");
-            Console.WriteLine("  menu view <id>");
+            Console.WriteLine("  meneu list <page num>");
+            Console.WriteLine("  menu info <id>");
             Console.WriteLine("  menu update <id>");
             Console.WriteLine("  menu remove <id>");
         }

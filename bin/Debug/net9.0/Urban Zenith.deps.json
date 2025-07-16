@@ -9,6 +9,7 @@
       "Urban Zenith/1.0.0": {
         "dependencies": {
           "ConsoleTableExt": "3.3.0",
+          "Spectre.Console": "0.50.0",
           "System.Data.SQLite": "1.0.119"
         },
         "runtime": {
@@ -100,6 +101,17 @@
             "rid": "win-x86",
             "assetType": "native",
             "fileVersion": "4.6.25512.1"
+          }
+        }
+      },
+      "Spectre.Console/0.50.0": {
+        "dependencies": {
+          "System.Memory": "4.6.3"
+        },
+        "runtime": {
+          "lib/net9.0/Spectre.Console.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.50.0.0"
           }
         }
       },
@@ -229,6 +241,7 @@
           }
         }
       },
+      "System.Memory/4.6.3": {},
       "System.Security.AccessControl/4.7.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "3.1.0",
@@ -361,6 +374,13 @@
       "path": "runtime.win-x86.runtime.native.system.data.sqlclient.sni/4.4.0",
       "hashPath": "runtime.win-x86.runtime.native.system.data.sqlclient.sni.4.4.0.nupkg.sha512"
     },
+    "Spectre.Console/0.50.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-gkwYncFqMjlPF6Yz8KeVsKWpdfv15sr6uKm+vXVa/8Q4tvx52LPzMQOO5m+bXwI3AGGFeY3cok3ZJbguYizswg==",
+      "path": "spectre.console/0.50.0",
+      "hashPath": "spectre.console.0.50.0.nupkg.sha512"
+    },
     "Stub.System.Data.SQLite.Core.NetStandard/1.0.119": {
       "type": "package",
       "serviceable": true,
@@ -423,6 +443,13 @@
       "sha512": "sha512-v+XbyYHaZjDfn0ENmJEV1VYLgGgCTx1gnfOBcppowbpOAriglYgGCvFCPr2EEZyBvXlpxbEsTwkOlInl107ahA==",
       "path": "system.drawing.common/4.7.0",
       "hashPath": "system.drawing.common.4.7.0.nupkg.sha512"
+    },
+    "System.Memory/4.6.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qdcDOgnFZY40+Q9876JUHnlHu7bosOHX8XISRoH94fwk6hgaeQGSgfZd8srWRZNt5bV9ZW2TljcegDNxsf+96A==",
+      "path": "system.memory/4.6.3",
+      "hashPath": "system.memory.4.6.3.nupkg.sha512"
     },
     "System.Security.AccessControl/4.7.0": {
       "type": "package",
