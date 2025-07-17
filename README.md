@@ -106,7 +106,9 @@ Here’s a quick reference of all supported CLI commands:
 | Command                                | Description									|
 | -------------------------------------- | -------------------------------------------- |
 | `order new <tableId>`                  | Create a new order							|
-| `order list`                           | List all orders								|
+| `order list`                           | List order < default page 1 >							|
+| `order list <pageNum>`                 | List order for specific Paga   |
+| `order list <pageNum> <pageSize>`      | List order with parameter Page number and page size |
 | `order complete <orderId>`             | Mark order as completed						|
 | `order additem`                        | Add items to active order by table			|
 | `order viewitems <tableId>`            | View items for a table’s current order		|
