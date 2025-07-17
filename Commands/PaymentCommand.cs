@@ -1,6 +1,7 @@
 ﻿using System;
 using UrbanZenith.Interfaces;
 using UrbanZenith.Services;
+using Spectre.Console;
 
 namespace UrbanZenith.Commands
 {
@@ -11,33 +12,44 @@ namespace UrbanZenith.Commands
 
         public void Execute(string args)
         {
-            if (string.IsNullOrWhiteSpace(args))
+            try
             {
-                ShowMenu();
-                return;
-            }
-
-            var parts = args.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            var command = parts[0].ToLower();
-
-            switch (command)
-            {
-                case "process":
-                    ProcessPayment(parts);
-                    break;
-
-                case "history":
-                    ShowPaymentHistory(parts);
-                    break;
-
-                case "info":
-                    ShowPaymentInfo(parts);
-                    break;
-
-                default:
-                    Console.WriteLine($"Unknown command: {command}");
+                if (string.IsNullOrWhiteSpace(args))
+                {
                     ShowHelp();
-                    break;
+                    return;
+                }
+
+                var parts = args.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var command = parts[0].ToLower();
+
+                switch (command)
+                {
+                    case "process":
+                        ProcessPayment(parts);
+                        break;
+
+                    case "history":
+                        ShowPaymentHistory(parts);
+                        break;
+
+                    case "info":
+                        ShowPaymentInfo(parts);
+                        break;
+
+                    case "help":
+                        ShowHelp();
+                        break;
+
+                    default:
+                        AnsiConsole.MarkupLine($"[red][[!]] Unknown command: '[bold red]{command}[/]'[/]");
+                        ShowHelp();
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[bold red]ERROR:[/] [red]{ex.Message}[/]");
             }
         }
 
@@ -45,7 +57,7 @@ namespace UrbanZenith.Commands
         {
             if (parts.Length != 2 || !int.TryParse(parts[1], out int tableId))
             {
-                Console.WriteLine("Usage: payment process <tableId>");
+                AnsiConsole.MarkupLine("[red][[!]][/] Usage: [bold white]payment process <tableId>[/]");
                 return;
             }
 
@@ -59,7 +71,7 @@ namespace UrbanZenith.Commands
 
             if (parts.Length == 1)
             {
-                // default
+
             }
             else if (parts.Length == 2 && int.TryParse(parts[1], out int parsedPage))
             {
@@ -74,7 +86,7 @@ namespace UrbanZenith.Commands
             }
             else
             {
-                Console.WriteLine("Usage: payment history [<page>] [<pageSize>]");
+                AnsiConsole.MarkupLine("[red][[!]][/] Usage: [bold white]payment history [<page>] [<pageSize>][/]");
                 return;
             }
 
@@ -85,7 +97,7 @@ namespace UrbanZenith.Commands
         {
             if (parts.Length != 2 || !int.TryParse(parts[1], out int paymentId))
             {
-                Console.WriteLine("Usage: payment info <paymentId>");
+                AnsiConsole.MarkupLine("[red][[!]][/] Usage: [bold white]payment info <paymentId>[/]");
                 return;
             }
 
@@ -96,14 +108,28 @@ namespace UrbanZenith.Commands
         {
             while (true)
             {
-                Console.WriteLine("\n=== Payment Management Menu ===");
-                Console.WriteLine("1. Process payment");
-                Console.WriteLine("2. View payment history");
-                Console.WriteLine("3. View payment details");
-                Console.WriteLine("0. Back to main menu");
-                Console.Write("Choose an option: ");
+                AnsiConsole.Clear();
+                AnsiConsole.Write(
+                    new Rule("[bold yellow]Payment Management Menu[/]")
+                        .RuleStyle("grey")
+                        .Centered());
 
-                string input = Console.ReadLine()?.Trim();
+                AnsiConsole.MarkupLine("[bold green]1.[/] Process payment");
+                AnsiConsole.MarkupLine("[bold green]2.[/] View payment history");
+                AnsiConsole.MarkupLine("[bold green]3.[/] View payment details");
+                AnsiConsole.MarkupLine("[bold red]0.[/] Back to main menu");
+
+                string input = AnsiConsole.Prompt(
+                    new TextPrompt<string>("[bold blue]Choose an option:[/]")
+                        .ValidationErrorMessage("[red][[!]] Invalid choice. Please enter a number from the list.[/]")
+                        .Validate(val =>
+                        {
+                            if (string.IsNullOrEmpty(val)) return ValidationResult.Error("[red]Choice cannot be empty.[/]");
+                            return int.TryParse(val, out int num) && (num >= 0 && num <= 3)
+                                ? ValidationResult.Success()
+                                : ValidationResult.Error("[red][[!]] Invalid choice. Please enter 0, 1, 2, or 3.[/]");
+                        }));
+
                 if (input == "0") break;
 
                 try
@@ -111,53 +137,75 @@ namespace UrbanZenith.Commands
                     switch (input)
                     {
                         case "1":
-                            Console.Write("Enter Table ID: ");
-                            if (int.TryParse(Console.ReadLine(), out int tableId))
-                                PaymentService.ProcessPaymentWithPrompt(tableId);
-                            else
-                                Console.WriteLine("Invalid Table ID.");
+                            int tableId = AnsiConsole.Prompt(
+                                new TextPrompt<int>("[green]Enter Table ID:[/]")
+                                    .ValidationErrorMessage("[red][[!]] Invalid Table ID. Please enter a positive number.[/]")
+                                    .Validate(val => val > 0 ? ValidationResult.Success() : ValidationResult.Error("[red]Table ID must be a positive number.[/]")));
+                            PaymentService.ProcessPaymentWithPrompt(tableId);
                             break;
 
                         case "2":
-                            Console.Write("Enter page number (default 1): ");
-                            string pageInput = Console.ReadLine()?.Trim();
-                            int page = string.IsNullOrEmpty(pageInput) || !int.TryParse(pageInput, out int tmpPage) ? 1 : tmpPage;
+                            int page = AnsiConsole.Prompt(
+                                new TextPrompt<int>("[green]Enter page number (default 1):[/]")
+                                    .ValidationErrorMessage("[red][[!]] Invalid page number. Please enter a positive number.[/]")
+                                    .Validate(val => val >= 1 ? ValidationResult.Success() : ValidationResult.Error("[red]Page number must be 1 or greater.[/]"))
+                                    .DefaultValue(1));
 
-                            Console.Write("Enter page size (default 10): ");
-                            string sizeInput = Console.ReadLine()?.Trim();
-                            int pageSize = string.IsNullOrEmpty(sizeInput) || !int.TryParse(sizeInput, out int tmpSize) ? 10 : tmpSize;
+                            int pageSize = AnsiConsole.Prompt(
+                                new TextPrompt<int>("[green]Enter page size (default 10):[/]")
+                                    .ValidationErrorMessage("[red][[!]] Invalid page size. Please enter a positive number.[/]")
+                                    .Validate(val => val > 0 ? ValidationResult.Success() : ValidationResult.Error("[red]Page size must be a positive number.[/]"))
+                                    .DefaultValue(10));
 
                             PaymentService.ShowPaymentHistory(page, pageSize);
                             break;
 
                         case "3":
-                            Console.Write("Enter Payment ID: ");
-                            if (int.TryParse(Console.ReadLine(), out int paymentId))
-                                PaymentService.ShowPaymentDetail(paymentId);
-                            else
-                                Console.WriteLine("Invalid Payment ID.");
+                            int paymentId = AnsiConsole.Prompt(
+                                new TextPrompt<int>("[green]Enter Payment ID:[/]")
+                                    .ValidationErrorMessage("[red][[!]] Invalid Payment ID. Please enter a positive number.[/]")
+                                    .Validate(val => val > 0 ? ValidationResult.Success() : ValidationResult.Error("[red]Payment ID must be a positive number.[/]")));
+                            PaymentService.ShowPaymentDetail(paymentId);
                             break;
 
                         default:
-                            Console.WriteLine("Invalid option.");
+                            AnsiConsole.MarkupLine("[red][[!]] Invalid option. Please enter a number from the menu.[/]");
                             break;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[ERROR] {ex.Message}");
+                    AnsiConsole.MarkupLine($"[bold red]ERROR:[/] [red]{ex.Message}[/]");
                 }
+
+                AnsiConsole.MarkupLine("\n[grey]Press Enter to continue...[/]");
+                Console.ReadLine();
             }
         }
 
         private void ShowHelp()
         {
-            Console.WriteLine("Usage:");
-            Console.WriteLine("  payment process <tableId>          - Process a payment for a table");
-            Console.WriteLine("  payment history                    - Show latest 10 payment records (page 1)");
-            Console.WriteLine("  payment history <page>             - Show payment records for specified page");
-            Console.WriteLine("  payment history <page> <pageSize>  - Show records with custom page size");
-            Console.WriteLine("  payment info <paymentId>           - Show detailed info about a payment");
+            AnsiConsole.Clear();
+            AnsiConsole.Write(
+                new Rule("[bold yellow]Payment Command Usage[/]")
+                    .RuleStyle("grey")
+                    .Centered());
+
+            var table = new Table()
+                .Border(TableBorder.Square)
+                .BorderColor(Color.Blue)
+                .AddColumn(new TableColumn("[bold blue]Command[/]"))
+                .AddColumn(new TableColumn("[bold blue]Description[/]"));
+
+            table.AddRow("[cyan]payment process[/] [grey]<tableId>[/]", "[white]Process a payment for a table.[/]");
+            table.AddRow("[cyan]payment history[/]", "[white]Show latest 10 payment records (page 1).[/]");
+            table.AddRow("[cyan]payment history[/] [grey]<page>[/]", "[white]Show payment records for specified page (default size 10).[/]");
+            table.AddRow("[cyan]payment history[/] [grey]<page> <pageSize>[/]", "[white]Show records with custom page number and size.[/]");
+            table.AddRow("[cyan]payment info[/] [grey]<paymentId>[/]", "[white]Show detailed information about a payment.[/]");
+            table.AddRow("[cyan]payment help[/]", "[white]Display this help message.[/]");
+
+            AnsiConsole.Write(table);
+            AnsiConsole.WriteLine();
         }
     }
 }

@@ -40,14 +40,22 @@ D:\Study Material\University\2nd Year\C#\Urban Zenith\bin\Debug\net9.0\runtimes\
 D:\Study Material\University\2nd Year\C#\Urban Zenith\bin\Debug\net9.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 D:\Study Material\University\2nd Year\C#\Urban Zenith\bin\Debug\net9.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
 D:\Study Material\University\2nd Year\C#\Urban Zenith\obj\Debug\net9.0\Urban Ze.615A1879.Up2Date
+D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Zenith.csproj.AssemblyReference.cache
+D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Zenith.GeneratedMSBuildEditorConfig.editorconfig
+D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Zenith.AssemblyInfoInputs.cache
+D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Zenith.AssemblyInfo.cs
+D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Zenith.csproj.CoreCompileInputs.cache
+D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Zenith.sourcelink.json
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\Urban Zenith.exe
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\Urban Zenith.deps.json
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\Urban Zenith.runtimeconfig.json
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\Urban Zenith.dll
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\Urban Zenith.pdb
+D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\ConsoleTableExt.dll
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\EntityFramework.SqlServer.dll
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\EntityFramework.dll
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\Microsoft.Win32.SystemEvents.dll
+D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\Spectre.Console.dll
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\System.Data.SQLite.dll
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\System.CodeDom.dll
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\System.Configuration.ConfigurationManager.dll
@@ -71,17 +79,9 @@ D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\runtimes\
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
-D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Zenith.csproj.AssemblyReference.cache
-D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Zenith.GeneratedMSBuildEditorConfig.editorconfig
-D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Zenith.AssemblyInfoInputs.cache
-D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Zenith.AssemblyInfo.cs
-D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Zenith.csproj.CoreCompileInputs.cache
-D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Zenith.sourcelink.json
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Ze.615A1879.Up2Date
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Zenith.dll
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\refint\Urban Zenith.dll
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Zenith.pdb
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\Urban Zenith.genruntimeconfig.cache
 D:\Study Material\University\2nd Year\C#\Urban-Zenith\obj\Debug\net9.0\ref\Urban Zenith.dll
-D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\ConsoleTableExt.dll
-D:\Study Material\University\2nd Year\C#\Urban-Zenith\bin\Debug\net9.0\Spectre.Console.dll

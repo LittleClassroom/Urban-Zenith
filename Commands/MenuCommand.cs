@@ -1,6 +1,7 @@
 ﻿using System;
 using UrbanZenith.Interfaces;
 using UrbanZenith.Services;
+using Spectre.Console;
 
 namespace UrbanZenith.Commands
 {
@@ -27,7 +28,7 @@ namespace UrbanZenith.Commands
                     if (int.TryParse(subArgs, out int id))
                         MenuService.InfoMenuItem(id);
                     else
-                        Console.WriteLine("Usage: menu info <id>");
+                        AnsiConsole.MarkupLine("[red][[!]][/] Usage: [bold white]menu info <id>[/]");
                     break;
 
                 case "add":
@@ -41,23 +42,22 @@ namespace UrbanZenith.Commands
                     MenuService.ListMenuItems(page);
                     break;
 
-
                 case "update":
                     if (int.TryParse(subArgs, out int updateId))
                         MenuService.UpdateMenuItem(updateId);
                     else
-                        Console.WriteLine("Usage: menu update <id>");
+                        AnsiConsole.MarkupLine("[red][[!]][/] Usage: [bold white]menu update <id>[/]");
                     break;
 
                 case "remove":
                     if (int.TryParse(subArgs, out int removeId))
                         MenuService.RemoveMenuItem(removeId);
                     else
-                        Console.WriteLine("Usage: menu remove <id>");
+                        AnsiConsole.MarkupLine("[red][[!]][/] Usage: [bold white]menu remove <id>[/]");
                     break;
 
                 default:
-                    Console.WriteLine($"Unknown menu command: '{subcommand}'");
+                    AnsiConsole.MarkupLine($"[red][[!]][/] Unknown menu command: '[bold red]{subcommand}[/]'");
                     ShowHelp();
                     break;
             }
@@ -65,33 +65,44 @@ namespace UrbanZenith.Commands
 
         public void ShowMenu()
         {
-            Console.Clear();
             while (true)
             {
-                Console.Clear();
-                Console.WriteLine("=== Menu Management ===");
-                Console.WriteLine("1. List menu items");
-                Console.WriteLine("2. View menu item");
-                Console.WriteLine("3. Add menu item");
-                Console.WriteLine("4. Update menu item");
-                Console.WriteLine("5. Remove menu item");
-                Console.WriteLine("0. Back to main menu");
-                Console.Write("Choose an option: ");
+                AnsiConsole.Clear();
+                AnsiConsole.Write(
+                    new Rule("[bold yellow]Menu Item Management[/]")
+                        .RuleStyle("grey")
+                        .Centered());
 
-                var input = Console.ReadLine()?.Trim();
+                var menuOptions = new SelectionPrompt<string>()
+                    .Title("[bold green]Choose an action:[/]")
+                    .PageSize(10)
+                    .AddChoices(new[]
+                    {
+                        "1. List menu items",
+                        "2. View menu item details",
+                        "3. Add new menu item",
+                        "4. Update existing menu item",
+                        "5. Remove menu item",
+                        "0. Back to main menu"
+                    })
+                    .HighlightStyle(new Style(Color.Yellow, Color.Black, Decoration.None));
 
-                switch (input)
+                string choice = AnsiConsole.Prompt(menuOptions);
+
+                AnsiConsole.WriteLine();
+
+                switch (choice.Split('.')[0].Trim())
                 {
                     case "1":
                         MenuService.ListMenuItems();
                         break;
 
                     case "2":
-                        Console.Write("Enter Menu Item ID: ");
-                        if (int.TryParse(Console.ReadLine(), out int viewId))
-                            MenuService.InfoMenuItem(viewId);
-                        else
-                            Console.WriteLine("Invalid ID.");
+                        int viewId = AnsiConsole.Prompt(
+                            new TextPrompt<int>("[green]Enter Menu Item ID to view:[/]")
+                                .ValidationErrorMessage("[red][[!]] Invalid ID. Please enter a number.[/]")
+                                .Validate(input => input > 0 ? ValidationResult.Success() : ValidationResult.Error("[red]ID must be a positive number.[/]")));
+                        MenuService.InfoMenuItem(viewId);
                         break;
 
                     case "3":
@@ -99,43 +110,57 @@ namespace UrbanZenith.Commands
                         break;
 
                     case "4":
-                        Console.Write("Enter Menu Item ID to update: ");
-                        if (int.TryParse(Console.ReadLine(), out int updateId))
-                            MenuService.UpdateMenuItem(updateId);
-                        else
-                            Console.WriteLine("Invalid ID.");
+                        int updateId = AnsiConsole.Prompt(
+                            new TextPrompt<int>("[green]Enter Menu Item ID to update:[/]")
+                                .ValidationErrorMessage("[red][[!]] Invalid ID. Please enter a number.[/]")
+                                .Validate(input => input > 0 ? ValidationResult.Success() : ValidationResult.Error("[red]ID must be a positive number.[/]")));
+                        MenuService.UpdateMenuItem(updateId);
                         break;
 
                     case "5":
-                        Console.Write("Enter Menu Item ID to remove: ");
-                        if (int.TryParse(Console.ReadLine(), out int removeId))
-                            MenuService.RemoveMenuItem(removeId);
-                        else
-                            Console.WriteLine("Invalid ID.");
+                        int removeId = AnsiConsole.Prompt(
+                            new TextPrompt<int>("[green]Enter Menu Item ID to remove:[/]")
+                                .ValidationErrorMessage("[red][[!]] Invalid ID. Please enter a number.[/]")
+                                .Validate(input => input > 0 ? ValidationResult.Success() : ValidationResult.Error("[red]ID must be a positive number.[/]")));
+                        MenuService.RemoveMenuItem(removeId);
                         break;
 
                     case "0":
                         return;
 
                     default:
-                        Console.WriteLine("Invalid choice.");
+                        AnsiConsole.MarkupLine("[red][[!]] Invalid choice. Please select an option from the list.[/]");
                         break;
                 }
 
-                Console.WriteLine("\nPress Enter to continue...");
+                AnsiConsole.MarkupLine("\n[grey]Press Enter to continue...[/]");
                 Console.ReadLine();
             }
         }
 
         private void ShowHelp()
         {
-            Console.WriteLine("Usage:");
-            Console.WriteLine("  menu add");
-            Console.WriteLine("  menu list");
-            Console.WriteLine("  meneu list <page num>");
-            Console.WriteLine("  menu info <id>");
-            Console.WriteLine("  menu update <id>");
-            Console.WriteLine("  menu remove <id>");
+            AnsiConsole.Clear();
+            AnsiConsole.Write(
+                new Rule("[bold yellow]Menu Command Usage[/]")
+                    .RuleStyle("grey")
+                    .Centered());
+
+            var table = new Table()
+                .Border(TableBorder.Square)
+                .BorderColor(Color.Blue)
+                .AddColumn(new TableColumn("[bold blue]Command[/]"))
+                .AddColumn(new TableColumn("[bold blue]Description[/]"));
+
+            table.AddRow("[cyan]menu add[/]", "[white]Add a new menu item.[/]");
+            table.AddRow("[cyan]menu list[/]", "[white]List all menu items (first page).[/]");
+            table.AddRow("[cyan]menu list[/] [grey]<page num>[/]", "[white]List menu items by page number.[/]"); 
+            table.AddRow("[cyan]menu info[/] [grey]<id>[/]", "[white]View details of a specific menu item.[/]");   
+            table.AddRow("[cyan]menu update[/] [grey]<id>[/]", "[white]Update an existing menu item.[/]"); 
+            table.AddRow("[cyan]menu remove[/] [grey]<id>[/]", "[white]Remove a menu item.[/]"); 
+
+            AnsiConsole.Write(table);
+            AnsiConsole.WriteLine();
         }
     }
 }

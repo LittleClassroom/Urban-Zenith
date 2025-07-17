@@ -1,12 +1,11 @@
-﻿using ConsoleTableExt;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using UrbanZenith.Database;
+using Spectre.Console;
 
 namespace UrbanZenith.Services
 {
-
     public static class ReportService
     {
         public static decimal SafeDecimal(object dbValue)
@@ -16,8 +15,14 @@ namespace UrbanZenith.Services
 
         public static void ShowDailySalesReport(DateTime? date = null)
         {
-            Console.Clear();
+            AnsiConsole.Clear();
             DateTime targetDate = date ?? DateTime.Today;
+
+            AnsiConsole.Write(
+                new Rule($"[bold yellow]Daily Sales Report - {targetDate:yyyy-MM-dd}[/]")
+                    .RuleStyle("grey")
+                    .Centered());
+            AnsiConsole.WriteLine();
 
             string sql = @"
                 SELECT COUNT(*) AS TotalPayments,
@@ -35,18 +40,44 @@ namespace UrbanZenith.Services
             {
                 if (reader.Read())
                 {
-                    Console.WriteLine("─────── Daily Sales Report ───────");
-                    Console.WriteLine($"Date           : {targetDate:yyyy-MM-dd}");
-                    Console.WriteLine($"Payments Made  : {reader["TotalPayments"]}");
-                    Console.WriteLine($"Total Revenue  : {SafeDecimal(reader["TotalRevenue"])}");
-                    Console.WriteLine("──────────────────────────────────");
+                    var totalPayments = reader["TotalPayments"] == DBNull.Value ? 0 : Convert.ToInt32(reader["TotalPayments"]);
+                    var totalRevenue = SafeDecimal(reader["TotalRevenue"]);
+
+                    var panel = new Panel(
+                        new Markup($"[bold blue]Payments Made:[/] [green]{totalPayments}[/]\n" +
+                                 $"[bold blue]Total Revenue:[/] [green]{totalRevenue:C}[/]")
+                    )
+                    .Header("[bold]Summary[/]")
+                    .Border(BoxBorder.Rounded)
+                    .BorderColor(Color.Green);
+
+                    AnsiConsole.Write(panel);
+
+                    if (totalPayments == 0)
+                    {
+                        AnsiConsole.MarkupLine($"\n[red][!] No sales recorded for {targetDate:yyyy-MM-dd}.[/]");
+                    }
+                }
+                else
+                {
+                    AnsiConsole.MarkupLine($"[red][!] Could not retrieve report data for {targetDate:yyyy-MM-dd}.[/]");
                 }
             }, parameters);
+
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine("[grey]Press Enter to continue...[/]");
+            Console.ReadLine();
         }
 
-        // 2. Sales by Payment Method
         public static void ShowSalesByPaymentMethod()
         {
+            AnsiConsole.Clear();
+            AnsiConsole.Write(
+                new Rule("[bold yellow]Sales by Payment Method[/]")
+                    .RuleStyle("grey")
+                    .Centered());
+            AnsiConsole.WriteLine();
+
             string sql = @"
                 SELECT PaymentMethod,
                        COUNT(*) AS Transactions,
@@ -56,67 +87,102 @@ namespace UrbanZenith.Services
                 ORDER BY Total DESC
             ";
 
+            var table = new Table()
+                .Border(TableBorder.Rounded)
+                .BorderColor(Color.Blue)
+                .AddColumn(new TableColumn("[bold blue]Method[/]").Centered())
+                .AddColumn(new TableColumn("[bold blue]Transactions[/]").Centered())
+                .AddColumn(new TableColumn("[bold blue]Revenue[/]").RightAligned());
+
+            bool hasData = false;
             DatabaseContext.ExecuteQuery(sql, reader =>
             {
-                Console.WriteLine("────── Sales by Payment Method ──────");
-                Console.WriteLine("Method       | Count | Revenue");
-                Console.WriteLine("--------------------------------------");
-
                 while (reader.Read())
                 {
+                    hasData = true;
                     string method = reader["PaymentMethod"].ToString();
                     int count = Convert.ToInt32(reader["Transactions"]);
-                    decimal total = Convert.ToDecimal(reader["Total"]);
+                    decimal total = SafeDecimal(reader["Total"]);
 
-                    Console.WriteLine($"{method,-12} | {count,5} | {total,8:C}");
+                    table.AddRow(
+                        new Markup($"[white]{method}[/]"),
+                        new Markup($"[cyan]{count}[/]"),
+                        new Markup($"[green]{total:C}[/]")
+                    );
                 }
-
-                Console.WriteLine("--------------------------------------");
             });
+
+            if (!hasData)
+            {
+                AnsiConsole.MarkupLine("[red][!] No sales data available by payment method.[/]");
+            }
+            else
+            {
+                AnsiConsole.Write(table);
+            }
+
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine("[grey]Press Enter to continue...[/]");
+            Console.ReadLine();
         }
 
         public static void ShowTopSellingItems()
         {
+            AnsiConsole.Clear();
+            AnsiConsole.Write(
+                new Rule("[bold yellow]Top Selling Menu Items[/]")
+                    .RuleStyle("grey")
+                    .Centered());
+            AnsiConsole.WriteLine();
+
             string sql = @"
-                SELECT 
+                SELECT
                     m.Name AS ItemName,
                     SUM(oi.Quantity) AS QuantitySold,
                     SUM(oi.Quantity * oi.Price) AS TotalRevenue
                 FROM OrderItems oi
                 JOIN MenuItems m ON m.Id = oi.MenuItemId
-                GROUP BY oi.MenuItemId
-                ORDER BY QuantitySold DESC
-    ";
+                GROUP BY oi.MenuItemId, m.Name
+                ORDER BY QuantitySold DESC, TotalRevenue DESC
+            ";
 
-            var rows = new List<object[]>();
+            var table = new Table()
+                .Border(TableBorder.Rounded)
+                .BorderColor(Color.Blue)
+                .AddColumn(new TableColumn("[bold magenta]Item Name[/]"))
+                .AddColumn(new TableColumn("[bold magenta]Quantity Sold[/]").Centered())
+                .AddColumn(new TableColumn("[bold magenta]Total Revenue[/]").RightAligned());
 
+            bool hasData = false;
             DatabaseContext.ExecuteQuery(sql, reader =>
             {
                 while (reader.Read())
                 {
-                    rows.Add(new object[]
-                    {
-                reader["ItemName"],
-                reader["QuantitySold"],
-                $"{Convert.ToDecimal(reader["TotalRevenue"]):C}"
-                    });
+                    hasData = true;
+                    string itemName = reader["ItemName"].ToString();
+                    int quantitySold = Convert.ToInt32(reader["QuantitySold"]);
+                    decimal totalRevenue = SafeDecimal(reader["TotalRevenue"]);
+
+                    table.AddRow(
+                        new Markup($"[white]{itemName}[/]"),
+                        new Markup($"[cyan]{quantitySold}[/]"),
+                        new Markup($"[green]{totalRevenue:C}[/]")
+                    );
                 }
             });
 
-            if (rows.Count == 0)
+            if (!hasData)
             {
-                Console.WriteLine("No items sold yet.");
-                return;
+                AnsiConsole.MarkupLine("[red][!] No items have been sold yet.[/]");
+            }
+            else
+            {
+                AnsiConsole.Write(table);
             }
 
-            ConsoleTableBuilder
-                .From(rows)
-                .WithTitle("Top Selling Menu Items", ConsoleColor.Green, ConsoleColor.Black)
-                .WithColumn("Item", "Quantity Sold", "Total Revenue")
-                .ExportAndWriteLine();
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine("[grey]Press Enter to continue...[/]");
+            Console.ReadLine();
         }
-
-
-        // Add more methods like TopSellingItems, RevenueByTable, etc.
     }
 }

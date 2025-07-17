@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.IO;
+using Spectre.Console; // Add this using directive!
 
 namespace UrbanZenith.Database
 {
@@ -11,79 +12,91 @@ namespace UrbanZenith.Database
         private static readonly string DbPath = Path.Combine(FolderPath, DbFileName);
         public static SQLiteConnection GetConnection()
         {
-            Directory.CreateDirectory(FolderPath); 
+            Directory.CreateDirectory(FolderPath);
             return new SQLiteConnection($"Data Source={DbPath};Version=3;");
         }
 
         public static void Initialize()
         {
             Directory.CreateDirectory(FolderPath);
-            if (!File.Exists(DbPath))
-            {
-                Console.WriteLine("📦 Creating new SQLite database...");
-                SQLiteConnection.CreateFile(DbPath);
-            }
 
+            // Use AnsiConsole.Status for a dynamic loading indicator
+            AnsiConsole.Status()
+                .Start("Initializing database...", ctx =>
+                {
+                    if (!File.Exists(DbPath))
+                    {
+                        ctx.Status("[grey][[Database]][/] > [bold yellow]Creating new database...[/]");
+                        SQLiteConnection.CreateFile(DbPath);
+                        System.Threading.Thread.Sleep(500); // Small pause for effect
+                    }
+                    else
+                    {
+                        ctx.Status("[grey][[Database]][/] > [bold cyan]Connecting to existing database...[/]");
+                        System.Threading.Thread.Sleep(500); // Small pause for effect
+                    }
 
-            using var conn = GetConnection();
-            conn.Open();
+                    using var conn = GetConnection();
+                    conn.Open();
 
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = @"
-                    CREATE TABLE IF NOT EXISTS MenuItems (
-                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        Name TEXT NOT NULL,
-                        Description TEXT,
-                        Price REAL NOT NULL
-                    );
+                    using var cmd = conn.CreateCommand();
+                    cmd.CommandText = @"
+                        CREATE TABLE IF NOT EXISTS MenuItems (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            Name TEXT NOT NULL,
+                            Description TEXT,
+                            Price REAL NOT NULL
+                        );
 
-                    CREATE TABLE IF NOT EXISTS Tables (
-                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        Name TEXT NOT NULL,
-                        Type TEXT NOT NULL,
-                        Status TEXT DEFAULT 'Available',
-                        StaffId INTEGER
-                    );
+                        CREATE TABLE IF NOT EXISTS Tables (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            Name TEXT NOT NULL,
+                            Type TEXT NOT NULL,
+                            Status TEXT DEFAULT 'Available',
+                            StaffId INTEGER
+                        );
 
-                    CREATE TABLE IF NOT EXISTS Orders (
-                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        TableId INTEGER NOT NULL,
-                        OrderDate TEXT DEFAULT CURRENT_TIMESTAMP,
-                        Status TEXT,
-                        FOREIGN KEY (TableId) REFERENCES Tables(Id)
-                    );
+                        CREATE TABLE IF NOT EXISTS Orders (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            TableId INTEGER NOT NULL,
+                            OrderDate TEXT DEFAULT CURRENT_TIMESTAMP,
+                            Status TEXT,
+                            FOREIGN KEY (TableId) REFERENCES Tables(Id)
+                        );
 
-                    CREATE TABLE IF NOT EXISTS OrderItems (
-                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        OrderId INTEGER NOT NULL,
-                        MenuItemId INTEGER NOT NULL,
-                        Quantity INTEGER DEFAULT 1,
-                        Price REAL NOT NULL,
-                        FOREIGN KEY (OrderId) REFERENCES Orders(Id),
-                        FOREIGN KEY (MenuItemId) REFERENCES MenuItems(Id)
-                    );
+                        CREATE TABLE IF NOT EXISTS OrderItems (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            OrderId INTEGER NOT NULL,
+                            MenuItemId INTEGER NOT NULL,
+                            Quantity INTEGER DEFAULT 1,
+                            Price REAL NOT NULL,
+                            FOREIGN KEY (OrderId) REFERENCES Orders(Id),
+                            FOREIGN KEY (MenuItemId) REFERENCES MenuItems(Id)
+                        );
 
-                    CREATE TABLE IF NOT EXISTS Payments (
-                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        OrderId INTEGER NOT NULL,
-                        PaymentMethod TEXT,
-                        PaidAmount REAL,
-                        PaidAt TEXT DEFAULT CURRENT_TIMESTAMP,
-                        FOREIGN KEY(OrderId) REFERENCES Orders(Id)
-                    );
+                        CREATE TABLE IF NOT EXISTS Payments (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            OrderId INTEGER NOT NULL,
+                            PaymentMethod TEXT,
+                            PaidAmount REAL,
+                            PaidAt TEXT DEFAULT CURRENT_TIMESTAMP,
+                            FOREIGN KEY(OrderId) REFERENCES Orders(Id)
+                        );
 
-                    CREATE TABLE IF NOT EXISTS Staff (
-                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        Name TEXT NOT NULL,
-                        Role TEXT,
-                        Username TEXT UNIQUE,
-                        Password TEXT
-                    );
-                ";
+                        CREATE TABLE IF NOT EXISTS Staff (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            Name TEXT NOT NULL,
+                            Role TEXT,
+                            Username TEXT UNIQUE,
+                            Password TEXT
+                        );
+                    ";
 
-            cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
 
-            Console.WriteLine("✅ Database initialized.");
+                    ctx.Status("[grey][[Database]][/] > [green]Database initialized. Successfully[/] ✅");
+                    System.Threading.Thread.Sleep(500); // Give user time to read the final status
+                });
         }
 
         public static void ExecuteQuery(string sql)
@@ -148,6 +161,5 @@ namespace UrbanZenith.Database
 
             return results;
         }
-
     }
 }

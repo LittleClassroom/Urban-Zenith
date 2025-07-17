@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UrbanZenith.Interfaces;
 using UrbanZenith.Commands;
 using UrbanZenith.Database;
-using System.ComponentModel.Design;
+using Spectre.Console;
 
 namespace UrbanZenith
 {
@@ -25,7 +24,6 @@ namespace UrbanZenith
                 new ReportCommand()
             };
 
-            // Add help last so it sees all other commands
             _commandList.Add(new HelpCommand(_commandList));
 
             foreach (var cmd in _commandList)
@@ -36,11 +34,20 @@ namespace UrbanZenith
 
         public static void Main(string[] args)
         {
-            Console.WriteLine("Initializing database...");
-            DatabaseContext.Initialize();
-            RegisterCommands();
+            AnsiConsole.Write(
+                new FigletText("Urban Zenith")
+                    .LeftJustified()
+                    .Color(Color.Yellow));
 
-            Console.WriteLine("=== Welcome to Urban Zenith Restaurant CLI ===\n");
+            AnsiConsole.Write(
+                new Rule("[yellow]Restaurant CLI[/]")
+                    .RuleStyle("grey")
+                    .Centered());
+
+            DatabaseContext.Initialize();
+            System.Threading.Thread.Sleep(500);
+
+            RegisterCommands();
 
             int mode = PromptMode();
 
@@ -48,38 +55,68 @@ namespace UrbanZenith
                 RunTextCommandMode();
             else if (mode == 2)
                 RunMenuMode();
+
+            AnsiConsole.Write(
+                new Align(
+                    new Panel("[cyan]Thank you for using Urban Zenith. Goodbye![/]")
+                        .Border(BoxBorder.Double)
+                        .BorderColor(Color.Grey),
+                    HorizontalAlignment.Center));
         }
 
         private static int PromptMode()
         {
-            Console.WriteLine("Choose interface mode:");
-            Console.WriteLine("[1] Text Command Mode");
-            Console.WriteLine("[2] Menu Navigation Mode");
+            var promptContentString = "[bold green]Choose interface mode:[/]\n" +
+                                      "  [yellow]1[/] - Text Command Mode\n" +
+                                      "  [yellow]2[/] - Menu Navigation Mode";
 
-            while (true)
-            {
-                Console.Write("Enter your choice (1 or 2): ");
-                string input = Console.ReadLine()?.Trim();
+            var panel = new Panel(new Markup(promptContentString))
+                .Border(BoxBorder.Rounded)
+                .BorderColor(Color.Green)
+                .Header("[yellow]Mode Selection[/]")
+                .HeaderAlignment(Justify.Center)
+                .Padding(1, 1, 1, 1);
 
-                if (input == "1" || input.Equals("text", StringComparison.OrdinalIgnoreCase))
-                    return 1;
-                if (input == "2" || input.Equals("menu", StringComparison.OrdinalIgnoreCase))
-                    return 2;
+            AnsiConsole.Write(panel);
 
-                Console.WriteLine("Invalid input. Please enter 1 or 2.");
-            }
+            return AnsiConsole.Prompt(
+                new TextPrompt<int>("[blue][[ Select Mode ]][/]: ")
+                    .ValidationErrorMessage("[red][[!]] Invalid input. Please enter 1 or 2.[/]")
+                    .Validate(input => input == 1 || input == 2));
+        }
+
+        private static string ReadInput(string label)
+        {
+            return AnsiConsole.Ask<string>($"[yellow]{label}[/] [green]>[/]");
         }
 
         private static void RunTextCommandMode()
         {
-            Console.WriteLine("\n--- Text Command Mode ---");
-            Console.WriteLine("Type 'help' to see available commands.");
-            Console.WriteLine("Type 'exit' to quit.\n");
+            AnsiConsole.Clear();
+
+            AnsiConsole.Write(
+                new Rule("[bold yellow] Text Command Mode [/]")
+                    .RuleStyle("grey")
+                    .Centered());
+
+            var instructionsPanel = new Panel(
+                new Markup(
+                    "[cyan]Type '[bold white]help[/]' to see available commands.\n" +
+                    "Type '[bold white]exit[/]' or '[bold white]quit[/]' to return to mode selection.[/]"
+                ))
+                .Border(BoxBorder.Square)
+                .BorderColor(Color.Grey)
+                .Padding(1, 1, 1, 1);
+
+            AnsiConsole.Write(instructionsPanel);
+
+            AnsiConsole.Write(new Rule().RuleStyle("grey"));
+
+            AnsiConsole.WriteLine();
 
             while (true)
             {
-                Console.Write("> ");
-                string input = Console.ReadLine()?.Trim();
+                var input = ReadInput("Command").Trim();
 
                 if (string.IsNullOrEmpty(input))
                     continue;
@@ -88,9 +125,9 @@ namespace UrbanZenith
                     input.Equals("quit", StringComparison.OrdinalIgnoreCase))
                     break;
 
-                string[] parts = input.Split(' ', 2);
-                string cmdName = parts[0].ToLower();
-                string cmdArgs = parts.Length > 1 ? parts[1] : "";
+                var parts = input.Split(' ', 2);
+                var cmdName = parts[0].ToLower();
+                var cmdArgs = parts.Length > 1 ? parts[1] : "";
 
                 if (_commands.TryGetValue(cmdName, out var cmd))
                 {
@@ -100,66 +137,83 @@ namespace UrbanZenith
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"[ERROR] {ex.Message}");
+                        AnsiConsole.MarkupLine($"[bold red]ERROR:[/] [red]{ex.Message}[/]");
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"Unknown command: '{cmdName}'. Type 'help' for a list of available commands.");
+                    AnsiConsole.MarkupLine($"[red][[!]] Unknown command:[/] '[bold red]{cmdName}[/]'. Type 'help' for a list of available commands.");
                 }
             }
 
-            Console.WriteLine("Exiting... Goodbye!");
+            AnsiConsole.MarkupLine("[cyan]\nReturning to mode selection...[/]");
         }
 
         private static void RunMenuMode()
         {
-            Console.WriteLine("\n--- Menu Navigation Mode ---");
-            Console.WriteLine("Select a command to execute:\n");
+            AnsiConsole.Clear();
+
+            AnsiConsole.Write(
+                new Rule("[bold yellow]Menu Navigation Mode[/]") // Improved header styling
+                    .RuleStyle("grey")
+                    .Centered());
+
+            AnsiConsole.MarkupLine("[cyan]Select a command to execute:[/]\n"); // Moved description out of table
 
             while (true)
             {
+                var table = new Table().Border(TableBorder.Heavy).BorderColor(Color.Green);
+                table.AddColumn(new TableColumn("[purple]No.[/]").Centered());
+                table.AddColumn("[white]Command[/]");
+                table.AddColumn("[grey]Description[/]");
+
                 for (int i = 0; i < _commandList.Count; i++)
                 {
-                    Console.WriteLine($"[{i + 1}] {_commandList[i].Name} - {_commandList[i].Description}");
+                    table.AddRow(
+                        $"[magenta]{i + 1}[/]",
+                        $"[white]{_commandList[i].Name}[/]",
+                        $"[grey]{_commandList[i].Description}[/]");
                 }
 
-                Console.WriteLine("[0] Exit");
-                Console.Write("\nChoose a command number: ");
-                string input = Console.ReadLine()?.Trim();
+                table.AddRow("[red]0[/]", "[red]Exit Menu[/]", "[red]Return to main mode selection[/]");
+                AnsiConsole.Write(table);
 
-                if (input == "0")
+                var input = AnsiConsole.Prompt(
+                    new TextPrompt<int>("[green][[ Select Command ]][/]:") // Improved prompt text
+                        .ValidationErrorMessage("[red][[!]] Invalid choice. Please enter a valid number.[/]")); // Consistent error message
+
+                if (input == 0)
                     break;
 
-                if (int.TryParse(input, out int index) && index > 0 && index <= _commandList.Count)
+                if (input > 0 && input <= _commandList.Count)
                 {
-                    var cmd = _commandList[index - 1];
+                    var cmd = _commandList[input - 1];
                     if (cmd is IMenuCommand menu)
                     {
                         try
                         {
+                            AnsiConsole.WriteLine();
                             menu.ShowMenu();
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine($"[ERROR] {ex.Message}");
+                            AnsiConsole.MarkupLine($"[bold red]ERROR:[/][red] {ex.Message}[/]");
                         }
                     }
                     else
                     {
-                        Console.WriteLine($"'{cmd.Name}' does not support menu mode.");
+                        AnsiConsole.MarkupLine($"[yellow]'{cmd.Name}' does not support menu mode directly. Please use Text Command Mode for this.[/]");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Invalid choice.");
+                    AnsiConsole.MarkupLine("[red][[!]] Invalid choice. Please select a number from the list.[/]"); // Consistent error message
                 }
 
-                Console.WriteLine(); 
+                AnsiConsole.WriteLine();
             }
 
-            Console.WriteLine("Exiting... Goodbye!");
+            AnsiConsole.MarkupLine("[cyan]\nReturning to mode selection...[/]"); // Consistent exit message
         }
-
     }
 }
