@@ -7,7 +7,7 @@ namespace UrbanZenith.Commands
     public class OrderCommand : ICommand, IMenuCommand
     {
         public string Name => "order";
-        public string Description => "Manage orders (new, list, complete, additem, viewitems, removeitem, updateitem)";
+        public string Description => "Manage orders (new, list, complete, additem, viewitems, removeitem, updateitem, cancel)"; // Updated description
 
         public void Execute(string args)
         {
@@ -17,7 +17,7 @@ namespace UrbanZenith.Commands
                 return;
             }
 
-            var parts = args.Split(' ', 3);
+            var parts = args.Split(' ', 3, StringSplitOptions.RemoveEmptyEntries);
             string subcommand = parts[0].ToLower();
 
             try
@@ -34,7 +34,12 @@ namespace UrbanZenith.Commands
                         break;
 
                     case "list":
-                        OrderService.ListOrders();
+                        int page = 1;
+                        if (parts.Length >= 2 && int.TryParse(parts[1], out int specifiedPage))
+                        {
+                            page = specifiedPage;
+                        }
+                        OrderService.ListOrders(page);
                         break;
 
                     case "complete":
@@ -44,6 +49,15 @@ namespace UrbanZenith.Commands
                             return;
                         }
                         OrderService.CompleteOrder(completeId);
+                        break;
+
+                    case "cancel": 
+                        if (parts.Length < 2 || !int.TryParse(parts[1], out int cancelId))
+                        {
+                            Console.WriteLine("Usage: order cancel <orderId>");
+                            return;
+                        }
+                        OrderService.CancelOrder(cancelId);
                         break;
 
                     case "additem":
@@ -117,6 +131,7 @@ namespace UrbanZenith.Commands
                 Console.WriteLine("5. View items for table");
                 Console.WriteLine("6. Remove order item");
                 Console.WriteLine("7. Update order item quantity");
+                Console.WriteLine("8. Cancel order"); // New menu option
                 Console.WriteLine("0. Back to main menu");
                 Console.WriteLine("================================");
                 Console.Write("Order >");
@@ -144,6 +159,14 @@ namespace UrbanZenith.Commands
                             Console.Write("Enter Order ID to complete: ");
                             if (int.TryParse(Console.ReadLine(), out int completeId))
                                 OrderService.CompleteOrder(completeId);
+                            else
+                                Console.WriteLine("Invalid Order ID.");
+                            break;
+
+                        case "8": // New menu case
+                            Console.Write("Enter Order ID to cancel: ");
+                            if (int.TryParse(Console.ReadLine(), out int cancelId))
+                                OrderService.CancelOrder(cancelId);
                             else
                                 Console.WriteLine("Invalid Order ID.");
                             break;
@@ -212,8 +235,9 @@ namespace UrbanZenith.Commands
         {
             Console.WriteLine("Usage:");
             Console.WriteLine("  order new <tableId>");
-            Console.WriteLine("  order list");
+            Console.WriteLine("  order list [page_number]");
             Console.WriteLine("  order complete <orderId>");
+            Console.WriteLine("  order cancel <orderId>");
             Console.WriteLine("  order additem");
             Console.WriteLine("  order viewitems <tableId>");
             Console.WriteLine("  order removeitem <orderItemId>");

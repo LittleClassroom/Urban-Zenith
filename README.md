@@ -25,6 +25,7 @@ Here's a complete `README.md` for your **UrbanZenith** CLI-based restaurant mana
 - Add/remove/update items to/from orders
 - View active items for each table
 - Supports multiple items and quantities per order
+- Cancel Order ( New )
 
 ### 💵 Payment System
 - Process payments per table
@@ -66,6 +67,7 @@ UrbanZenith uses the following core packages:
 | `System.Data.SQLite` | SQLite database access                |
 | `ConsoleTableExt`    | Pretty table formatting in CLI output |
 
+
 Install via .NET CLI:
 
 ```bash
@@ -105,15 +107,16 @@ Here’s a quick reference of all supported CLI commands:
 
 ### 🧾 Order Commands
 
-| Command                                | Description                            |
-| -------------------------------------- | -------------------------------------- |
-| `order new <tableId>`                  | Create a new order                     |
-| `order list`                           | List all orders                        |
-| `order complete <orderId>`             | Mark order as completed                |
-| `order additem`                        | Add items to active order by table     |
-| `order viewitems <tableId>`            | View items for a table’s current order |
-| `order removeitem <orderItemId>`       | Remove an item from an order           |
-| `order updateitem <orderItemId> <qty>` | Update item quantity                   |
+| Command                                | Description									|
+| -------------------------------------- | -------------------------------------------- |
+| `order new <tableId>`                  | Create a new order							|
+| `order list`                           | List all orders								|
+| `order complete <orderId>`             | Mark order as completed						|
+| `order additem`                        | Add items to active order by table			|
+| `order viewitems <tableId>`            | View items for a table’s current order		|
+| `order removeitem <orderItemId>`       | Remove an item from an order					|
+| `order updateitem <orderItemId> <qty>` | Update item quantity							|
+| `order cancel <orderId>`				 | Cancel Specific Order that currently active	|
 
 ### 💵 Payment Commands
 
@@ -135,9 +138,6 @@ Here’s a quick reference of all supported CLI commands:
 | `report items`              | Top-selling menu items (quantity/rev) |
 
 ---
-
-Would you like this in a separate `docs/cli-reference.md` file too?
-Or should I auto-generate a CLI help command inside each command class?
 
 
 ---

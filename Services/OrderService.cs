@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using UrbanZenith.Database;
 using UrbanZenith.Models;
+using ConsoleTableExt;
+using Spectre.Console;
 
 namespace UrbanZenith.Services
 {
@@ -13,6 +15,7 @@ namespace UrbanZenith.Services
             using var conn = DatabaseContext.GetConnection();
             conn.Open();
 
+            // Declared checkTableCmd within the scope of its usage
             var checkTableCmd = conn.CreateCommand();
             checkTableCmd.CommandText = "SELECT Status FROM Tables WHERE Id = @tableId";
             checkTableCmd.Parameters.AddWithValue("@tableId", tableId);
@@ -20,11 +23,10 @@ namespace UrbanZenith.Services
             var status = checkTableCmd.ExecuteScalar()?.ToString();
             if (status == "Occupied")
             {
-                Console.WriteLine($"Table {tableId} is already occupied.");
+                Console.WriteLine($"Error: Table {tableId} is already occupied.");
                 return -1;
             }
 
-            // Insert new order
             var cmd = conn.CreateCommand();
             cmd.CommandText = @"
                 INSERT INTO Orders (TableId, Status)
@@ -35,7 +37,6 @@ namespace UrbanZenith.Services
 
             long newOrderId = (long)cmd.ExecuteScalar();
 
-            // Update table status to Occupied
             var updateTableCmd = conn.CreateCommand();
             updateTableCmd.CommandText = "UPDATE Tables SET Status = 'Occupied' WHERE Id = @tableId";
             updateTableCmd.Parameters.AddWithValue("@tableId", tableId);
@@ -45,42 +46,100 @@ namespace UrbanZenith.Services
             return (int)newOrderId;
         }
 
-        // List all orders with status and table info
-        public static void ListOrders()
+        private static int GetTotalOrderCount()
         {
+            using var conn = DatabaseContext.GetConnection();
+            conn.Open();
+            var cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT COUNT(*) FROM Orders;";
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        public static void ListOrders(int page = 1, int pageSize = 10)
+        {
+            Console.Clear();
+            Console.WriteLine("=== Order List ===");
+
+            if (page < 1) page = 1;
+            if (pageSize < 1) pageSize = 10;
+
+            int totalOrders = GetTotalOrderCount();
+            int totalPages = (int)Math.Ceiling(totalOrders / (double)pageSize);
+            if (totalPages == 0) totalPages = 1;
+            if (page > totalPages) page = totalPages;
+
+            int offset = (page - 1) * pageSize;
+
+            Console.WriteLine($"Showing orders page {page} of {totalPages} ({totalOrders} total orders).");
+            Console.WriteLine("-------------------------------------------------------------------");
+
+            var ordersData = new List<object[]>();
+
             using var conn = DatabaseContext.GetConnection();
             conn.Open();
 
             var cmd = conn.CreateCommand();
             cmd.CommandText = @"
-                SELECT Orders.Id, Tables.Name, Orders.Status, Orders.OrderDate
-                FROM Orders
-                JOIN Tables ON Orders.TableId = Tables.Id
-                ORDER BY Orders.OrderDate DESC;
-            ";
+        SELECT Orders.Id, Tables.Name, Orders.Status, Orders.OrderDate
+        FROM Orders
+        JOIN Tables ON Orders.TableId = Tables.Id
+        ORDER BY Orders.OrderDate DESC
+        LIMIT @pageSize OFFSET @offset;
+    ";
+            cmd.Parameters.AddWithValue("@pageSize", pageSize);
+            cmd.Parameters.AddWithValue("@offset", offset);
 
             using var reader = cmd.ExecuteReader();
 
-            Console.WriteLine("=== Orders ===");
             while (reader.Read())
             {
-                int orderId = reader.GetInt32(0);
-                string tableName = reader.GetString(1);
-                string status = reader.GetString(2);
-                string orderDate = reader.GetString(3);
-
-                Console.WriteLine($"Order ID: {orderId}, Table: {tableName}, Status: {status}, Date: {orderDate}");
+                ordersData.Add(new object[]
+                {
+            reader.GetInt32(0),
+            reader.GetString(1),
+            reader.GetString(2),
+            reader.GetDateTime(3).ToString("yyyy-MM-dd HH:mm:ss")
+                });
             }
-            Console.WriteLine("==============");
+
+            if (ordersData.Count == 0)
+            {
+                Console.WriteLine(page == 1 ? "No orders found in the system." : "No more orders on this page.");
+            }
+            else
+            {
+                var table = new Spectre.Console.Table();
+
+                table.AddColumn("Order ID");
+                table.AddColumn("Table");
+                table.AddColumn("Status");
+                table.AddColumn("Order Date");
+
+                foreach (var row in ordersData)
+                {
+                    table.AddRow(
+                        row[0].ToString(),
+                        row[1].ToString(),
+                        row[2].ToString(),
+                        row[3].ToString()
+                    );
+                }
+
+                AnsiConsole.Write(table);
+            }
+
+            Console.WriteLine("-------------------------------------------------------------------");
+            Console.WriteLine($"Pages: {page} / {totalPages} (Use 'order list <page_number>' to navigate)");
+            Console.WriteLine("===================================================================");
+            Console.WriteLine();
         }
 
-        // Complete an order by order ID and free the table
         public static void CompleteOrder(int orderId)
         {
             using var conn = DatabaseContext.GetConnection();
             conn.Open();
 
-            // Check if order exists and is active
+            // Declare checkOrderCmd here to keep it in scope for all its uses
             var checkOrderCmd = conn.CreateCommand();
             checkOrderCmd.CommandText = "SELECT Status, TableId FROM Orders WHERE Id = @orderId";
             checkOrderCmd.Parameters.AddWithValue("@orderId", orderId);
@@ -88,7 +147,7 @@ namespace UrbanZenith.Services
             using var reader = checkOrderCmd.ExecuteReader();
             if (!reader.Read())
             {
-                Console.WriteLine($"Order {orderId} does not exist.");
+                Console.WriteLine($"Error: Order {orderId} does not exist.");
                 return;
             }
 
@@ -159,6 +218,53 @@ namespace UrbanZenith.Services
 
             return total;
         }
+
+        public static void CancelOrder(int orderId)
+        {
+            using var conn = DatabaseContext.GetConnection();
+            conn.Open();
+
+            var checkOrderCmd = conn.CreateCommand();
+            checkOrderCmd.CommandText = "SELECT Status, TableId FROM Orders WHERE Id = @orderId";
+            checkOrderCmd.Parameters.AddWithValue("@orderId", orderId);
+
+            using var reader = checkOrderCmd.ExecuteReader();
+            if (!reader.Read())
+            {
+                Console.WriteLine($"Error: Order {orderId} does not exist.");
+                return;
+            }
+
+            string status = reader.GetString(0);
+            int tableId = reader.GetInt32(1);
+
+            if (status == "Completed")
+            {
+                Console.WriteLine($"Order {orderId} is already completed and cannot be cancelled.");
+                return;
+            }
+            if (status == "Cancelled")
+            {
+                Console.WriteLine($"Order {orderId} is already cancelled.");
+                return;
+            }
+
+            // Update order status to 'Cancelled'
+            var updateOrderCmd = conn.CreateCommand();
+            updateOrderCmd.CommandText = "UPDATE Orders SET Status = 'Cancelled' WHERE Id = @orderId";
+            updateOrderCmd.Parameters.AddWithValue("@orderId", orderId);
+            updateOrderCmd.ExecuteNonQuery();
+
+            // Update associated table status to 'Available'
+            var updateTableCmd = conn.CreateCommand();
+            updateTableCmd.CommandText = "UPDATE Tables SET Status = 'Available' WHERE Id = @tableId";
+            updateTableCmd.Parameters.AddWithValue("@tableId", tableId);
+            updateTableCmd.ExecuteNonQuery();
+
+            Console.WriteLine($"Order {orderId} has been cancelled. Table {tableId} is now available.");
+        }
+
+
 
     }
 }
