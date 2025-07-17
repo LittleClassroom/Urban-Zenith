@@ -1,7 +1,4 @@
-Here's a complete `README.md` for your **UrbanZenith** CLI-based restaurant management system, formatted in Markdown and ready for GitHub:
-
 ---
-
 # 🍽️ UrbanZenith
 
 **UrbanZenith** is a modular, CLI-based restaurant management system built in **C#**. Designed for local restaurants, cafés, or food courts, it handles orders, payments, reports, and table assignments with ease — all without requiring a graphical UI or external dependencies.
