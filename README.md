@@ -1,204 +1,175 @@
-# 🍽️ Urban Zenith: Restaurant Management CLI
+# Urban Zenith
 
-**Urban Zenith** is a comprehensive, text-based (CLI) restaurant management system built with **C#** and **.NET 9.0**. It's designed to be a lightweight, powerful tool for managing all core aspects of a restaurant's operations—from table assignments to financial reports—directly from a command line, without needing a graphical user interface (GUI).
+A command-line interface (CLI) application for managing a restaurant.
 
-The application uses a local **SQLite** database, making it self-contained and easy to run on any system with the .NET runtime.
+## Features
 
----
+- **Menu Management**: Add, update, remove, and view menu items.
+- **Order Management**: Create, list, complete, and cancel orders.
+- **Table Management**: Add, remove, and manage restaurant tables.
+- **Staff Management**: Add, remove, and manage staff members.
+- **Payment Processing**: Process payments for orders.
+- **Reporting**: Generate reports on sales and top-selling items.
 
-## 🚀 Core Features
+## Getting Started
 
-The application is broken down into several key modules:
-
-**1. Table Management**
-- **Functionality:** Allows staff to manage restaurant tables.
-- **Actions:**
-    - List all or only available tables.
-    - Add, update, and remove tables.
-    - Assign a staff member to a table.
-    - Update a table's status (`Available`, `Occupied`, `Broken`).
-    - Reset a table to its default state.
-
-**2. Staff Management**
-- **Functionality:** Manages employee records and credentials.
-- **Actions:**
-    - Add, update, and remove staff members.
-    - List all staff.
-    - View detailed information for a specific staff member.
-    - Includes fields for `Name`, `Role`, and a unique `Username`.
-
-**3. Order Management**
-- **Functionality:** Handles the entire lifecycle of a customer's order.
-- **Actions:**
-    - Create a new order and link it to a table.
-    - Add, update, or remove items from an active order.
-    - View all items on a specific table's active order.
-    - Mark orders as `Completed` or `Cancelled`.
-    - List all orders with pagination.
-
-**4. Payment System**
-- **Functionality:** Processes customer payments and tracks transactions.
-- **Actions:**
-    - Process a payment for a table's active order.
-    - Supports multiple payment methods: `Cash`, `Card`, `QR`, `E-wallet`.
-    - Calculates the total due and the change to be returned.
-    - View a paginated history of all payments.
-    - Look up detailed information for a specific payment.
-
-**5. Reporting**
-- **Functionality:** Generates key business insights and financial reports.
-- **Reports Available:**
-    - **Daily Sales Report:** Shows total revenue and number of payments for today or a specified date.
-    - **Sales by Payment Method:** Breaks down revenue by how customers paid.
-    - **Top-Selling Items:** Lists menu items by quantity sold and total revenue generated.
-
----
-
-## 🛠️ Technical Stack
-
-| Component          | Technology                               |
-| ------------------ | ---------------------------------------- |
-| **Language**       | C#                                       |
-| **Framework**      | .NET 9.0                                 |
-| **Database**       | SQLite                                   |
-| **UI**             | Spectre.Console (for rich CLI)           |
-| **Data Display**   | ConsoleTableExt (for formatted tables)   |
-
----
-
-## 🏛️ Architecture
-
-- **Command Pattern:** Each primary action (e.g., `table`, `order`) is implemented as a command that conforms to an `ICommand` interface. This makes the system modular and easy to extend.
-- **Service Layer:** Business logic is cleanly separated from the UI and database. For example, `OrderService` contains the logic for managing orders, while `OrderCommand` handles the user input.
-- **Dual-Mode Operation:** The application can be used in two ways:
-    1.  **Text Command Mode:** For power users who prefer typing commands (e.g., `order new 5`).
-    2.  **Menu Navigation Mode:** A user-friendly, menu-driven interface for navigating through options with number inputs.
-
----
-
-## 🗃️ Database Schema
-
-The application relies on a simple yet effective relational database schema:
-
-- `MenuItems`: Stores food and drink items with their price and description.
-- `Tables`: Manages physical tables, their type, status, and assigned staff.
-- `Staff`: Contains records for employees, including their role and credentials.
-- `Orders`: Tracks customer orders, linking them to a table and status.
-- `OrderItems`: A junction table detailing which menu items are in which order.
-- `Payments`: Records all financial transactions, linked to an order.
-
----
-
-## 🏁 Getting Started
+Follow these instructions to get a copy of the project up and running on your local machine.
 
 ### Prerequisites
 
-- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) or later.
 
-### 1. Clone the Repository
+### Installation & Running
 
-```bash
-git clone https://github.com/your-username/Urban-Zenith.git
-cd Urban-Zenith
-```
+1.  **Clone the repository:**
+    ```sh
+    git clone https://github.com/your-username/Urban-Zenith.git
+    cd Urban-Zenith
+    ```
 
-### 2. Build the Project
+2.  **Build the project:**
+    ```sh
+    dotnet build
+    ```
 
-```bash
-dotnet build
-```
+3.  **Run the application:**
+    ```sh
+    dotnet run
+    ```
+    The application will start and prompt you to choose between Text Command Mode and Menu Navigation Mode.
 
-### 3. Run the Application
+## Project Structure
 
-```bash
-dotnet run
-```
+The project is organized into the following directories:
 
-The application will start and prompt you to choose between **Text Command Mode** and **Menu Navigation Mode**.
+- **`/Commands`**: Contains the implementation for each CLI command.
+- **`/Database`**: Manages the SQLite database connection and initialization.
+- **`/Interfaces`**: Defines interfaces for commands (`ICommand`, `IMenuCommand`).
+- **`/Models`**: Contains the data models for the application (e.g., `Order`, `MenuItem`).
+- **`/Services`**: Contains the business logic for handling operations related to models.
+- **`/Utils`**: Contains utility classes, such as for styled input.
 
----
+## Dependencies
 
-## ⌨️ CLI Commands
+This project relies on the following NuGet packages:
 
-Here’s a quick reference of all supported CLI commands:
+- **Spectre.Console**: For creating beautiful, interactive console applications.
+- **System.Data.SQLite**: The ADO.NET provider for SQLite.
+- **ConsoleTableExt**: For creating simple console tables (used in some services).
 
-### 📋 Table Commands
+## Commands
 
-| Command                            | Description                             |
-| ---------------------------------- | --------------------------------------- |
-| `table list`                       | List all tables                         |
-| `table available`                  | List available tables                   |
-| `table add`                        | Add a new table                         |
-| `table remove <id>`                | Remove a table                          |
-| `table reset <id>`                 | Reset table (clear assignments/orders)  |
-| `table status <id> <status>`       | Set status: Available, Occupied, Broken |
-| `table assign <tableId> <staffId>` | Assign staff to table                   |
-| `table unassign <tableId>`         | Unassign staff                          |
-| `table update <id>`                | Update table information                |
+The application supports a total of **36** commands to manage different aspects of the restaurant, available in both a direct text-based mode and an interactive menu mode.
 
-### 👨‍🍳 Staff Commands
+### General Commands
 
-| Command             | Description            |
-| ------------------- | ---------------------- |
-| `staff list`        | List all staff         |
-| `staff add`         | Add a new staff member |
-| `staff remove <id>` | Remove a staff member  |
-| `staff info <id>`   | View staff details     |
-| `staff update <id>` | Update staff info      |
+- `help`: Displays a list of available commands.
+- `exit` / `quit`: Exits the application.
 
-### 🧾 Order Commands
+### Menu Commands
 
-| Command                                | Description									|
-| -------------------------------------- | -------------------------------------------- |
-| `order new <tableId>`                  | Create a new order							|
-| `order list`                           | List order < default page 1 >							|
-| `order list <pageNum>`                 | List order for specific Paga   |
-| `order list <pageNum> <pageSize>`      | List order with parameter Page number and page size |
-| `order complete <orderId>`             | Mark order as completed						|
-| `order additem`                        | Add items to active order by table			|
-| `order viewitems <tableId>`            | View items for a table’s current order		|
-| `order removeitem <orderItemId>`       | Remove an item from an order					|
-| `order updateitem <orderItemId> <qty>` | Update item quantity							|
-| `order cancel <orderId>`				 | Cancel Specific Order that currently active	|
+- `menu add`: Add a new menu item.
+- `menu list [page]`: List all menu items.
+- `menu info <id>`: View details of a specific menu item.
+- `menu update <id>`: Update an existing menu item.
+- `menu remove <id>`: Remove a menu item.
 
-### 💵 Payment Commands
+### Order Commands
 
-| Command                             | Description                       |
-| ----------------------------------- | --------------------------------- |
-| `payment process <tableId>`         | Process payment for table's order |
-| `payment history`                   | Show latest 10 payments           |
-| `payment history <page>`            | Show payments by page             |
-| `payment history <page> <pageSize>` | Paginated payment history         |
-| `payment info <paymentId>`          | View detailed payment info        |
+- `order new <tableId>`: Create a new order for a table.
+- `order list [page]`: List all active orders.
+- `order complete <orderId>`: Mark an order as completed.
+- `order cancel <orderId>`: Cancel an existing order.
+- `order additem`: Add items to an order.
+- `order viewitems <tableId>`: View all items on a table's active order.
+- `order removeitem <orderItemId>`: Remove a specific item from an order.
+- `order updateitem <orderItemId> <newQuantity>`: Update the quantity of an item on an order.
 
-### 📊 Report Commands
+### Table Commands
 
-| Command                     | Description                           |
-| --------------------------- | ------------------------------------- |
-| `report daily`              | Today’s sales summary                 |
-| `report daily <YYYY-MM-DD>` | Summary for specific date             |
-| `report method`             | Revenue by payment method             |
-| `report items`              | Top-selling menu items (quantity/rev) |
+- `table list`: List all tables.
+- `table available`: List all available tables.
+- `table add`: Add a new table.
+- `table remove <id>`: Remove a table by ID.
+- `table reset <id>`: Reset a table's status to available.
+- `table status <id> <new_status>`: Update a table's status.
+- `table assign <tableId> <staffId>`: Assign a staff member to a table.
+- `table unassign <tableId>`: Unassign staff from a table.
+- `table update <id>`: Update table details.
 
----
+### Staff Commands
 
-## 🗺️ Roadmap
+- `staff list`: List all staff members.
+- `staff add`: Add a new staff member.
+- `staff remove <id>`: Remove a staff member by ID.
+- `staff info <id>`: View detailed information for a staff member.
+- `staff update <id>`: Update details for a staff member.
 
-- [ ] Authentication system for staff login
-- [ ] Role-based access control
-- [ ] Export reports as PDF/CSV
-- [ ] Cross-platform testing (Linux/Mac)
+### Payment Commands
 
----
+- `payment process <tableId>`: Process a payment for a table.
+- `payment history [page] [pageSize]`: Show payment history.
+- `payment info <paymentId>`: Show detailed information about a payment.
 
-## 🧑‍💻 Author
+### Report Commands
 
-**Meng Seang (Twilight)**
-- Full-stack Developer & Graphic Designer
-- [Portfolio](https://mengseang.netlify.app)
+- `report daily [YYYY-MM-DD]`: Show today's or a specific day's sales summary.
+- `report method`: Show revenue grouped by payment method.
+- `report items`: Show quantity sold per menu item.
 
----
+## Usage Example
 
-## 📄 License
+Here is a simple workflow for taking an order and processing a payment:
 
-This project is licensed under the MIT License.
+1.  **Create a new order for Table 5:**
+    ```
+    order new 5
+    ```
+2.  **Add items to the new order:**
+    ```
+    order additem
+    > Enter Table ID: 5
+    > Enter Menu Item ID: 1
+    > Enter quantity: 2
+    > Enter Menu Item ID: 3
+    > Enter quantity: 1
+    > Enter Menu Item ID: done
+    ```
+3.  **View the items on the table's order:**
+    ```
+    order viewitems 5
+    ```
+4.  **Process the payment for Table 5:**
+    ```
+    payment process 5
+    > Enter payment amount: 55.00
+    > Select payment method: Card
+    > Confirm payment...
+    ```
+
+## Database
+
+The application uses a SQLite database to store all data. The database file (`UrbanZenith.db`) is created in the `Database` directory.
+
+The database schema includes the following tables:
+
+- `MenuItems`: Stores information about menu items.
+- `Tables`: Stores information about restaurant tables.
+- `Orders`: Stores information about customer orders.
+- `OrderItems`: Stores the items included in each order.
+- `Payments`: Stores payment information for orders.
+- `Staff`: Stores information about staff members.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a pull request.
+
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
+
+## License
+
+Distributed under the MIT License.
