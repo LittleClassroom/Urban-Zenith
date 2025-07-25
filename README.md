@@ -1,79 +1,124 @@
-# 🍽️ UrbanZenith
+# 🍽️ Urban Zenith: Restaurant Management CLI
 
-**UrbanZenith** is a modular, CLI-based restaurant management system built in **C#**. Designed for local restaurants, cafés, or food courts, it handles orders, payments, reports, and table assignments with ease — all without requiring a graphical UI or external dependencies.
+**Urban Zenith** is a comprehensive, text-based (CLI) restaurant management system built with **C#** and **.NET 9.0**. It's designed to be a lightweight, powerful tool for managing all core aspects of a restaurant's operations—from table assignments to financial reports—directly from a command line, without needing a graphical user interface (GUI).
+
+The application uses a local **SQLite** database, making it self-contained and easy to run on any system with the .NET runtime.
 
 ---
 
-## 🚀 Features
+## 🚀 Core Features
 
-### ✅ Table Management
-- List, add, update, remove, reset tables
-- Assign/unassign tables to staff
-- Track table status (Available, Occupied, Broken)
+The application is broken down into several key modules:
 
-### 🧑‍🍳 Staff Management
-- Add, list, update, and remove staff
-- Staff roles and login credentials supported
-- Unique usernames per staff
+**1. Table Management**
+- **Functionality:** Allows staff to manage restaurant tables.
+- **Actions:**
+    - List all or only available tables.
+    - Add, update, and remove tables.
+    - Assign a staff member to a table.
+    - Update a table's status (`Available`, `Occupied`, `Broken`).
+    - Reset a table to its default state.
 
-### 🧾 Order Management
-- Create new orders per table
-- Add/remove/update items to/from orders
-- View active items for each table
-- Supports multiple items and quantities per order
-- Cancel Order ( New )
+**2. Staff Management**
+- **Functionality:** Manages employee records and credentials.
+- **Actions:**
+    - Add, update, and remove staff members.
+    - List all staff.
+    - View detailed information for a specific staff member.
+    - Includes fields for `Name`, `Role`, and a unique `Username`.
 
-### 💵 Payment System
-- Process payments per table
-- View payment history and details
-- Supports various methods: Cash, Card, QR, E-wallet
-- Tracks paid amounts and timestamps
+**3. Order Management**
+- **Functionality:** Handles the entire lifecycle of a customer's order.
+- **Actions:**
+    - Create a new order and link it to a table.
+    - Add, update, or remove items from an active order.
+    - View all items on a specific table's active order.
+    - Mark orders as `Completed` or `Cancelled`.
+    - List all orders with pagination.
 
-### 📊 Reports
-- Daily Sales Report (today or custom date)
-- Revenue grouped by payment method
-- Top-selling menu items (with quantity and revenue)
-- All reports support formatted CLI output
+**4. Payment System**
+- **Functionality:** Processes customer payments and tracks transactions.
+- **Actions:**
+    - Process a payment for a table's active order.
+    - Supports multiple payment methods: `Cash`, `Card`, `QR`, `E-wallet`.
+    - Calculates the total due and the change to be returned.
+    - View a paginated history of all payments.
+    - Look up detailed information for a specific payment.
+
+**5. Reporting**
+- **Functionality:** Generates key business insights and financial reports.
+- **Reports Available:**
+    - **Daily Sales Report:** Shows total revenue and number of payments for today or a specified date.
+    - **Sales by Payment Method:** Breaks down revenue by how customers paid.
+    - **Top-Selling Items:** Lists menu items by quantity sold and total revenue generated.
+
+---
+
+## 🛠️ Technical Stack
+
+| Component          | Technology                               |
+| ------------------ | ---------------------------------------- |
+| **Language**       | C#                                       |
+| **Framework**      | .NET 9.0                                 |
+| **Database**       | SQLite                                   |
+| **UI**             | Spectre.Console (for rich CLI)           |
+| **Data Display**   | ConsoleTableExt (for formatted tables)   |
+
+---
+
+## 🏛️ Architecture
+
+- **Command Pattern:** Each primary action (e.g., `table`, `order`) is implemented as a command that conforms to an `ICommand` interface. This makes the system modular and easy to extend.
+- **Service Layer:** Business logic is cleanly separated from the UI and database. For example, `OrderService` contains the logic for managing orders, while `OrderCommand` handles the user input.
+- **Dual-Mode Operation:** The application can be used in two ways:
+    1.  **Text Command Mode:** For power users who prefer typing commands (e.g., `order new 5`).
+    2.  **Menu Navigation Mode:** A user-friendly, menu-driven interface for navigating through options with number inputs.
 
 ---
 
 ## 🗃️ Database Schema
 
-Using **SQLite**, UrbanZenith includes the following tables:
+The application relies on a simple yet effective relational database schema:
 
-```sql
-MenuItems(Id, Name, Description, Price)
-Tables(Id, Name, Type, Status, StaffId)
-Orders(Id, TableId, OrderDate, Status)
-OrderItems(Id, OrderId, MenuItemId, Quantity, Price)
-Payments(Id, OrderId, PaymentMethod, PaidAmount, PaidAt)
-Staff(Id, Name, Role, Username, Password)
-````
-
-Great call — here's how to enhance your `README.md` with:
+- `MenuItems`: Stores food and drink items with their price and description.
+- `Tables`: Manages physical tables, their type, status, and assigned staff.
+- `Staff`: Contains records for employees, including their role and credentials.
+- `Orders`: Tracks customer orders, linking them to a table and status.
+- `OrderItems`: A junction table detailing which menu items are in which order.
+- `Payments`: Records all financial transactions, linked to an order.
 
 ---
 
-## 📦 NuGet Packages Used
+## 🏁 Getting Started
 
-UrbanZenith uses the following core packages:
+### Prerequisites
 
-| Package              | Purpose                               |
-| -------------------- | ------------------------------------- |
-| `System.Data.SQLite` | SQLite database access                |
-| `ConsoleTableExt`    | Pretty table formatting in CLI output |
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
 
-
-Install via .NET CLI:
+### 1. Clone the Repository
 
 ```bash
-dotnet add package System.Data.SQLite
-dotnet add package ConsoleTableExt
+git clone https://github.com/your-username/Urban-Zenith.git
+cd Urban-Zenith
 ```
+
+### 2. Build the Project
+
+```bash
+dotnet build
+```
+
+### 3. Run the Application
+
+```bash
+dotnet run
+```
+
+The application will start and prompt you to choose between **Text Command Mode** and **Menu Navigation Mode**.
 
 ---
 
-## 🔧 CLI Command List
+## ⌨️ CLI Commands
 
 Here’s a quick reference of all supported CLI commands:
 
@@ -137,72 +182,23 @@ Here’s a quick reference of all supported CLI commands:
 
 ---
 
+## 🗺️ Roadmap
 
----
-
-## 🧩 Architecture
-
-* **Command Pattern** for CLI commands (`table`, `order`, `report`, etc.)
-* **Service Layer** for business logic (`OrderService`, `ReportService`, etc.)
-* **Interfaces** like `ICommand`, `IMenuCommand` ensure consistency
-* **SQLite** database with safe parameterized queries
-* **ConsoleTableExt** used for table-style outputs
-
----
-
-## 💻 How to Run
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/LittleClassroom/UrbanZenith.git
-cd UrbanZenith
-```
-
-### 2. Build the Project
-
-Using .NET CLI:
-
-```bash
-dotnet build
-```
-
-### 3. Run the CLI App
-
-```bash
-dotnet run
-```
-
-> 🛠 Make sure SQLite is available and the app has permission to create/write to `urbanzenith.db`.
-
----
-
-## 📅 Roadmap
-
-* [ ] Authentication system for staff login
-* [ ] Role-based access control
-* [ ] Export reports as PDF/CSV
-* [ ] Offline desktop version via Tauri or Electron
-* [ ] Cross-platform testing (Linux/Mac)
-
----
-
-## 📸 Screenshots
-
-> Coming soon — CLI UI previews
+- [ ] Authentication system for staff login
+- [ ] Role-based access control
+- [ ] Export reports as PDF/CSV
+- [ ] Cross-platform testing (Linux/Mac)
 
 ---
 
 ## 🧑‍💻 Author
 
 **Meng Seang (Twilight)**
-📎 Full-stack Developer & Graphic Designer
-🌐 [Portfolio](https://mengseang.netlify.app)
+- Full-stack Developer & Graphic Designer
+- [Portfolio](https://mengseang.netlify.app)
 
 ---
 
 ## 📄 License
 
 This project is licensed under the MIT License.
-
-

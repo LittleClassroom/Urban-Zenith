@@ -7,8 +7,8 @@ namespace UrbanZenith.Commands
 {
     public class OrderCommand : ICommand, IMenuCommand
     {
-        public string Name => "order";
-        public string Description => "Manage orders (new, list, complete, additem, viewitems, removeitem, updateitem, cancel)";
+        public string Name { get; } =  "order";
+        public string Description { get; } =  "Manage orders (new, list, complete, additem, viewitems, removeitem, updateitem, cancel)";
 
         public void Execute(string args)
         {

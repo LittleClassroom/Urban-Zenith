@@ -154,11 +154,11 @@ namespace UrbanZenith
             AnsiConsole.Clear();
 
             AnsiConsole.Write(
-                new Rule("[bold yellow]Menu Navigation Mode[/]") // Improved header styling
+                new Rule("[bold yellow]Menu Navigation Mode[/]") 
                     .RuleStyle("grey")
                     .Centered());
 
-            AnsiConsole.MarkupLine("[cyan]Select a command to execute:[/]\n"); // Moved description out of table
+            AnsiConsole.MarkupLine("[cyan]Select a command to execute:[/]\n");
 
             while (true)
             {
